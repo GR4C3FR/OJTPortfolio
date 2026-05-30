@@ -209,6 +209,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
   return (
     <Draggable 
       handle=".title-bar"
+      cancel="button, a, input, textarea, select"
       onDrag={handleDrag}
       onStop={handleDragStop}
       position={position}

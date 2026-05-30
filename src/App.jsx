@@ -84,8 +84,8 @@ function App() {
   const [windowSizes, setWindowSizes] = useState(() => {
     const saved = getSavedState('windowSizes', {})
     return {
-      about: { width: 1440, height: 1080 },
-      ...saved
+      ...saved,
+      about: { width: 700, height: 584 }
     }
   })
   const [windowZIndex, setWindowZIndex] = useState({})
