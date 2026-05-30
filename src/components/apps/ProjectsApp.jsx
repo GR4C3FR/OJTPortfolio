@@ -1,68 +1,63 @@
 import styled from 'styled-components'
+import CardSwap, { Card } from './CardSwap'
 
 const Container = styled.div`
+  position: relative;
+  width: 100%;
+  min-height: 520px;
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
 `
 
-const ProjectCard = styled.div`
-  border-left: 4px solid #e74c3c;
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #ecf0f1;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
+const Header = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  max-width: 280px;
+  color: #1f2937;
 `
 
-const ProjectTitle = styled.h3`
-  color: #2c3e50;
-  font-size: 16px;
-  margin-bottom: 5px;
+const Title = styled.h2`
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
 `
 
-const ProjectDesc = styled.p`
-  color: #555;
-  font-size: 13px;
-  line-height: 1.5;
-  margin-bottom: 10px;
-`
-
-const Tags = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-`
-
-const Tag = styled.span`
-  background: #e74c3c;
-  color: white;
-  padding: 3px 8px;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 600;
+const Description = styled.p`
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
 `
 
 function ProjectsApp() {
-  const projects = []
-
   return (
     <Container>
-      {projects.map(project => (
-        <ProjectCard key={project.id}>
-          <ProjectTitle>{project.title}</ProjectTitle>
-          <ProjectDesc>{project.desc}</ProjectDesc>
-          <Tags>
-            {project.tags.map((tag, idx) => (
-              <Tag key={idx}>{tag}</Tag>
-            ))}
-          </Tags>
-        </ProjectCard>
-      ))}
+      <CardSwap
+        width={420}
+        height={320}
+        cardDistance={30}
+        verticalDistance={40}
+        delay={5000}
+        pauseOnHover
+        skewAmount={0}
+      >
+        <Card customClass="project-card">
+          <h3>Brand Refresh</h3>
+          <p>Designed a full visual identity and responsive experience for a creative studio.</p>
+        </Card>
+        <Card customClass="project-card">
+          <h3>Product Launch</h3>
+          <p>Built a marketing landing page with animated interactions and mobile UX.
+          </p>
+        </Card>
+        <Card customClass="project-card">
+          <h3>Portfolio Experience</h3>
+          <p>Created an interactive portfolio interface with polished motion design.</p>
+        </Card>
+      </CardSwap>
     </Container>
   )
 }
