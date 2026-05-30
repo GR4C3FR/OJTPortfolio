@@ -13,11 +13,13 @@ const AppContainer = styled.div`
 `
 
 const allApps = [
-  { id: 'davinci', name: 'DaVinci Resolve', color: '#fff' },
-  { id: 'illustrator', name: 'Adobe Illustrator', color: '#fff' },
-  { id: 'photoshop', name: 'Adobe Photoshop', color: '#fff' },
-  { id: 'lightroom', name: 'Adobe Lightroom Classic', color: '#fff' },
-  { id: 'certifications', name: 'Certifications', color: '#fff' },
+  { id: 'davinci', name: 'DaVinci Resolve', color: '#fff', icon: '' },
+  { id: 'figma', name: 'Figma', color: '#fff', icon: '' },
+  { id: 'framer', name: 'Framer', color: '#fff', icon: '' },
+  { id: 'illustrator', name: 'Adobe Illustrator', color: '#fff', icon: '' },
+  { id: 'photoshop', name: 'Adobe Photoshop', color: '#fff', icon: '' },
+  { id: 'lightroom', name: 'Adobe Lightroom Classic', color: '#fff', icon: '' },
+  { id: 'certifications', name: 'Certifications', color: '#fff', icon: '' },
 ]
 
 const dockApps = [
@@ -38,6 +40,8 @@ const getInitialIconPositions = () => {
   positions['illustrator'] = { x: 0, y: 100 }
   positions['lightroom'] = { x: 0, y: 200 }
   positions['davinci'] = { x: 0, y: 300 }
+  positions['figma'] = { x: 0, y: 400 }
+  positions['framer'] = { x: 0, y: 500 }
 
   // Other apps spread out (these won't show on desktop icons, but maintain positions)
   const ICON_SIZE = 80
@@ -140,21 +144,18 @@ function App() {
 
   const toggleApp = useCallback((appId, appData) => {
     setOpenApps(prev => {
-      const newState = { ...prev, [appId]: !prev[appId] }
-      
+      const wasOpen = !!prev[appId]
+      const newState = { ...prev, [appId]: !wasOpen }
+
       // When opening a new app, bring it to front and save initial position
-      if (newState[appId] && !prev[appId]) {
-        // Calculate new z-index based on current window z-indices
-        const currentZIndices = Object.values(windowZIndex).filter(Boolean).map(z => parseInt(z))
-        const currentMaxZIndex = currentZIndices.length > 0 ? Math.max(...currentZIndices) : 1000
-        const newZIndex = currentMaxZIndex + 1
-        
-        setMaxZIndex(newZIndex)
-        setWindowZIndex(prevZ => ({
-          ...prevZ,
-          [appId]: newZIndex
-        }))
-        
+      if (newState[appId] && !wasOpen) {
+        // Increment global max z-index and assign to this window
+        setMaxZIndex(prevMax => {
+          const next = prevMax + 1
+          setWindowZIndex(prevZ => ({ ...prevZ, [appId]: next }))
+          return next
+        })
+
         // Save initial position immediately so it doesn't change when other windows open
         if (!windowPositions[appId]) {
           const initialPos = getNextPosition(appId)
@@ -164,7 +165,13 @@ function App() {
           }))
         }
       }
-      
+
+      // If app is already open and user clicks its icon, bring it to front instead of closing
+      if (wasOpen && !newState[appId]) {
+        // If the intent was to focus the window, reopen and bring to front
+        // (keep default toggle behavior - do nothing special here)
+      }
+
       return newState
     })
   }, [windowZIndex, windowPositions, getNextPosition])

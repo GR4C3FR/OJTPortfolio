@@ -58,12 +58,7 @@ const Input = styled.input`
 `
 
 function TerminalApp() {
-  const [output, setOutput] = useState([
-    "Welcome to Charles Garcia's Terminal",
-    'Type "help" for available commands',
-    'Type "clear" to clear the terminal',
-    '',
-  ])
+  const [output, setOutput] = useState([])
   const [input, setInput] = useState('')
   const inputRef = useRef(null)
   const outputRef = useRef(null)
@@ -76,74 +71,10 @@ function TerminalApp() {
     inputRef.current?.focus()
   }, [])
 
-  const commands = {
-    help: () => [
-      'Available commands:',
-      '  about     - Learn about me',
-      '  skills    - List my resume',
-      '  projects  - See my works',
-      '  contact   - Get contact info',
-      '  clear     - Clear terminal',
-      '  whoami    - Display current user',
-      '  date      - Show current date',
-      '  echo <text> - Echo text',
-    ],
-    about: () => [
-      'Charles Garcia',
-      'Full-stack developer and creative technologist',
-      'Passionate about building beautiful digital experiences',
-    ],
-    skills: () => [
-      'Frontend: React, Vue, JavaScript, TypeScript, CSS',
-      'Backend: Node.js, Python, Express, Django',
-      'Databases: MongoDB, PostgreSQL, MySQL',
-      'Tools: Git, Docker, AWS, Webpack',
-    ],
-    projects: () => [
-      'Desktop Portfolio - React web app',
-      'E-Commerce Platform - Full-stack with payment integration',
-      'Data Visualization Dashboard - Interactive analytics',
-      'Social Media App - Real-time platform',
-    ],
-    contact: () => [
-      'Email: charles@example.com',
-      'LinkedIn: linkedin.com/in/charlesgarcia',
-      'GitHub: github.com/charlesgarcia',
-      'Twitter: twitter.com/charlesgarcia',
-    ],
-    whoami: () => ['charles@portfolio'],
-    date: () => [new Date().toString()],
-    clear: () => [],
-  }
+  const commands = {}
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const trimmedInput = input.trim()
-
-    if (!trimmedInput) {
-      return
-    }
-
-    const newOutput = [...output, `$ ${trimmedInput}`]
-
-    if (trimmedInput === 'clear') {
-      setOutput([])
-    } else if (trimmedInput.startsWith('echo ')) {
-      const text = trimmedInput.slice(5)
-      newOutput.push(text)
-      setOutput(newOutput)
-    } else if (commands[trimmedInput]) {
-      const result = commands[trimmedInput]()
-      newOutput.push(...result, '')
-      setOutput(newOutput)
-    } else if (trimmedInput === '') {
-      setOutput(newOutput)
-    } else {
-      newOutput.push(`Command not found: ${trimmedInput}`, '')
-      setOutput(newOutput)
-    }
-
-    setInput('')
   }
 
   return (

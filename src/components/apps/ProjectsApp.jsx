@@ -48,32 +48,7 @@ const Tag = styled.span`
 `
 
 function ProjectsApp() {
-  const projects = [
-    {
-      id: 1,
-      title: 'Desktop Portfolio',
-      desc: 'Interactive desktop-style portfolio with draggable windows and taskbar - the site you\'re viewing now!',
-      tags: ['React', 'Vite', 'Styled Components']
-    },
-    {
-      id: 2,
-      title: 'E-Commerce Platform',
-      desc: 'Full-stack e-commerce platform with payment integration and real-time inventory management.',
-      tags: ['Node.js', 'React', 'MongoDB', 'Stripe']
-    },
-    {
-      id: 3,
-      title: 'Data Visualization Dashboard',
-      desc: 'Interactive dashboard with real-time data visualization and advanced filtering capabilities.',
-      tags: ['React', 'D3.js', 'TypeScript', 'Firebase']
-    },
-    {
-      id: 4,
-      title: 'Social Media App',
-      desc: 'Real-time social platform with messaging, notifications, and user interactions.',
-      tags: ['React Native', 'Node.js', 'PostgreSQL', 'Socket.io']
-    },
-  ]
+  const projects = []
 
   return (
     <Container>

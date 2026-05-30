@@ -48,29 +48,7 @@ const ProgressFill = styled.div`
 `
 
 function SkillsApp() {
-  const skills = {
-    'Frontend': [
-      { name: 'React', level: 95 },
-      { name: 'JavaScript/ES6+', level: 90 },
-      { name: 'TypeScript', level: 85 },
-      { name: 'CSS/SCSS', level: 88 },
-      { name: 'HTML5', level: 92 },
-    ],
-    'Backend': [
-      { name: 'Node.js', level: 88 },
-      { name: 'Express.js', level: 87 },
-      { name: 'Python', level: 80 },
-      { name: 'SQL', level: 85 },
-      { name: 'REST APIs', level: 90 },
-    ],
-    'Tools & Others': [
-      { name: 'Git/GitHub', level: 92 },
-      { name: 'Docker', level: 75 },
-      { name: 'AWS', level: 70 },
-      { name: 'Webpack/Vite', level: 85 },
-      { name: 'Testing (Jest)', level: 80 },
-    ],
-  }
+  const skills = {}
 
   return (
     <Container>

@@ -36,9 +36,6 @@ const Description = styled.p`
 function DaVinciApp() {
   return (
     <Container>
-      <Icon src="/davinci.svg" alt="DaVinci Resolve" />
-      <Title>DaVinci Resolve</Title>
-      <Description>Professional video editing and color grading software</Description>
     </Container>
   )
 }

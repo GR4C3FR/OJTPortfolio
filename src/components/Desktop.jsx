@@ -13,6 +13,8 @@ import IllustratorApp from './apps/IllustratorApp'
 import PhotoshopApp from './apps/PhotoshopApp'
 import LightroomApp from './apps/LightroomApp'
 import CertificationsApp from './apps/CertificationsApp'
+import FigmaApp from './apps/FigmaApp'
+import FramerApp from './apps/FramerApp'
 
 const DesktopContainer = styled.div`
   flex: 1;
@@ -36,6 +38,8 @@ const FolderWrapper = styled.div`
   align-items: center;
   gap: 0px;
   padding: 8px 5px;
+  width: 100px;
+  height: 120px;
   border-radius: 8px;
   transition: background 0.2s ease;
   
@@ -96,6 +100,8 @@ const ContextMenuSeparator = styled.div`
 
 const desktopIcons = [
   { id: 'davinci', name: 'DaVinci Resolve', icon: '/davinci.svg', color: '#222222' },
+  { id: 'figma', name: 'Figma', icon: '/figma.svg', color: '#000' },
+  { id: 'framer', name: 'Framer', icon: '/framer.svg', color: '#000' },
   { id: 'illustrator', name: 'Adobe Illustrator', icon: '/illustrator.svg', color: '#FF9500' },
   { id: 'photoshop', name: 'Adobe Photoshop', icon: '/photoshop.svg', color: '#31A8FF' },
   { id: 'lightroom', name: 'Adobe Lightroom Classic', icon: '/lightroom.svg', color: '#31A8FF' },
@@ -107,6 +113,8 @@ const appComponents = {
   skills: SkillsApp,
   contact: ContactApp,
   davinci: DaVinciApp,
+  figma: FigmaApp,
+  framer: FramerApp,
   illustrator: IllustratorApp,
   photoshop: PhotoshopApp,
   lightroom: LightroomApp,
@@ -119,6 +127,8 @@ const appColors = {
   skills: '#2ecc71',
   contact: '#f39c12',
   davinci: '#222222',
+  figma: '#000000',
+  framer: '#000000',
   illustrator: '#FF9500',
   photoshop: '#31A8FF',
   lightroom: '#31A8FF',
@@ -168,6 +178,8 @@ function Desktop({ openApps, toggleApp, closeApp, allApps, windowPositions, upda
       'illustrator',
       'lightroom',
       'davinci',
+      'figma',
+      'framer',
       'separator',
       'download'
     ];
@@ -320,7 +332,9 @@ function Desktop({ openApps, toggleApp, closeApp, allApps, windowPositions, upda
               'photoshop': 'photoshop',
               'illustrator': 'illustrator',
               'lightroom': 'lightroom',
-              'davinci': 'davinci'
+              'davinci': 'davinci',
+              'figma': 'figma',
+              'framer': 'framer'
             };
             
             const appId = appIdMap[item] || item;

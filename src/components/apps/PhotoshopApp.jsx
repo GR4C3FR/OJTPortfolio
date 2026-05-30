@@ -36,9 +36,6 @@ const Description = styled.p`
 function PhotoshopApp() {
   return (
     <Container>
-      <Icon src="/photoshop.svg" alt="Adobe Photoshop" />
-      <Title>Adobe Photoshop</Title>
-      <Description>Professional photo editing and digital art software</Description>
     </Container>
   )
 }

@@ -9,9 +9,11 @@ const IconWrapper = styled.div`
   gap: 8px;
   cursor: grab;
   transition: background 0.2s ease;
-  padding: 10px;
+  padding: 10px 8px;
   border-radius: 8px;
   user-select: none;
+  width: 100px;
+  box-sizing: border-box;
 
   &:active {
     cursor: grabbing;
@@ -28,7 +30,7 @@ const IconWrapper = styled.div`
 `
 
 const Icon = styled.div`
-  font-size: 40px;
+  font-size: 30px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   pointer-events: none;
 `
@@ -47,7 +49,7 @@ const Label = styled.span`
   color: white;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   word-break: break-word;
-  max-width: 70px;
+  max-width: 84px;
   line-height: 1.2;
   pointer-events: none;
 `

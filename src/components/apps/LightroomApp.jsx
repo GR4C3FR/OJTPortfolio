@@ -36,9 +36,6 @@ const Description = styled.p`
 function LightroomApp() {
   return (
     <Container>
-      <Icon src="/lightroom.svg" alt="Adobe Lightroom Classic" />
-      <Title>Adobe Lightroom Classic</Title>
-      <Description>Photo management and editing software for photographers</Description>
     </Container>
   )
 }

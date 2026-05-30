@@ -43,23 +43,7 @@ const CertificationItem = styled.div`
 `
 
 function CertificationsApp() {
-  const certifications = [
-    {
-      name: 'Certificate 1',
-      issuer: 'Issuing Organization',
-      date: '2024'
-    },
-    {
-      name: 'Certificate 2',
-      issuer: 'Issuing Organization',
-      date: '2024'
-    },
-    {
-      name: 'Certificate 3',
-      issuer: 'Issuing Organization',
-      date: '2023'
-    }
-  ]
+  const certifications = []
 
   return (
     <Container>

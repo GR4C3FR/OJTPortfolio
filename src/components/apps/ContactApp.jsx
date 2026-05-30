@@ -44,9 +44,7 @@ const Icon = styled.span`
 `
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: none;
 `
 
 const Input = styled.input`
@@ -126,56 +124,6 @@ function ContactApp() {
 
   return (
     <Container>
-      <Section>
-        <Title>Get in Touch 📬</Title>
-        <ContactLink href="mailto:charles@example.com">
-          <Icon>✉️</Icon>
-          charles@example.com
-        </ContactLink>
-        <ContactLink href="https://linkedin.com" target="_blank">
-          <Icon>💼</Icon>
-          LinkedIn Profile
-        </ContactLink>
-        <ContactLink href="https://github.com" target="_blank">
-          <Icon>🐙</Icon>
-          GitHub Profile
-        </ContactLink>
-        <ContactLink href="https://twitter.com" target="_blank">
-          <Icon>𝕏</Icon>
-          Twitter/X
-        </ContactLink>
-      </Section>
-
-      <Section>
-        <Title>Send a Message</Title>
-        <Form onSubmit={handleSubmit}>
-          <Input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            type="email"
-            name="email"
-            placeholder="Your Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <Textarea
-            name="message"
-            placeholder="Your Message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-          />
-          <Button type="submit">Send Message</Button>
-          {submitted && <Message>✓ Message sent! I'll get back to you soon.</Message>}
-        </Form>
-      </Section>
     </Container>
   )
 }
