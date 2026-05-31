@@ -89,6 +89,8 @@ function App() {
       about: { width: 700, height: 584 },
       ...saved,
       projects: { width: 600, height: 500 },
+      ...saved,
+      skills: { width: 500, height: 680 },
     }
   })
   const [windowZIndex, setWindowZIndex] = useState({})
