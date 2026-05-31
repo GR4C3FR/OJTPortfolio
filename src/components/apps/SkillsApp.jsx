@@ -9,13 +9,21 @@ const Notepad = styled.div`
   padding: 0px;
   box-sizing: border-box;
   font-family: 'Jetbrains', monospace;
+  background: transparent;
 `
 
 const Container = styled.div`
-  width: 96%;
-  max-width: 1000px;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
-  padding: 6px 12px;
+  padding: 18px 16px 16px;
+  background-color: #fffff4;
+  background-image:
+    linear-gradient(rgba(82, 112, 68, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(82, 112, 68, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 0 0 1px rgba(82, 112, 68, 0.12);
 `
 
 const Header = styled.div`
@@ -43,6 +51,7 @@ const Columns = styled.div`
 const Column = styled.div``
 
 const Section = styled.section`
+  background: white;
   margin-bottom: 18px;
   padding-top: 6px;
   border: 1px solid black;

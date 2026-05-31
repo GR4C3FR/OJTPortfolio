@@ -105,7 +105,7 @@ const Button = styled.button`
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  // padding: 20px;
   background: white;
   pointer-events: auto;
   user-select: text;
