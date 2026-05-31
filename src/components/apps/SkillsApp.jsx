@@ -45,6 +45,15 @@ const Column = styled.div``
 const Section = styled.section`
   margin-bottom: 18px;
   padding-top: 6px;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0px black;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
 `
 
 const SectionTitle = styled.h3`
@@ -52,13 +61,15 @@ const SectionTitle = styled.h3`
   font-size: 14px;
   color: black;
   font-weight: 600;
+  border-bottom: 1px solid black;
 `
 
 const Bullet = styled.li`
   margin-bottom: 6px;
-  color: #4b5563;
+  color: black;
   font-size: 13px;
   line-height: 1.2;
+  margin-left: 12px;
 `
 const DateText = styled.span`
   display: block;
@@ -105,21 +116,12 @@ function SkillsApp() {
             <Section>
               <SectionTitle>TOOLS</SectionTitle>
               <List>
-                <Bullet>Git, GitHub</Bullet>
-                <Bullet>Figma</Bullet>
                 <Bullet>Adobe Photoshop</Bullet>
                 <Bullet>Adobe Illustrator</Bullet>
                 <Bullet>DaVinci Resolve</Bullet>
-              </List>
-            </Section>
-
-            <Section>
-              <SectionTitle>EDUCATION</SectionTitle>
-              <List>
-                 <Bullet>
-                  <div><strong>Bachelor of Science in Information Technology</strong> — Web Development, Holy Angel University</div>
-                  <DateText><i>2023 — 2027</i></DateText>
-                 </Bullet>
+                <Bullet>Figma</Bullet>
+                <Bullet>Framer</Bullet>
+                <Bullet>Git, GitHub</Bullet>
               </List>
             </Section>
             
@@ -147,6 +149,16 @@ function SkillsApp() {
                 <Bullet>Adaptability</Bullet>
                 <Bullet>Attention to detail</Bullet>
                 <Bullet>Initiative and eagerness to learn</Bullet>
+              </List>
+            </Section>
+
+            <Section>
+              <SectionTitle>EDUCATION</SectionTitle>
+              <List>
+                 <Bullet>
+                  <div><strong>Bachelor of Science in Information Technology</strong> — Web Development, Holy Angel University</div>
+                  <DateText><i>2023 — 2027</i></DateText>
+                 </Bullet>
               </List>
             </Section>
 
