@@ -17,6 +17,7 @@ const PreviewFrame = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: #ffffff;
@@ -31,6 +32,31 @@ const PreviewImage = styled.img`
   display: block;
 `
 
+const VerifyButton = styled.button`
+  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, opacity 180ms ease;
+  margin-top: 6px;
+  align-self: center;
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+  }
+
+  &:disabled {
+    cursor: progress;
+    opacity: 0.7;
+  }
+`
+
 const allApps = [
   { id: 'davinci', name: 'DaVinci Resolve', color: '#303030', icon: '' },
   { id: 'figma', name: 'Figma', color: '#303030', icon: '' },
@@ -40,6 +66,15 @@ const allApps = [
   { id: 'lightroom', name: 'Adobe Lightroom Classic', color: '#303030', icon: '' },
   { id: 'certifications', name: 'Certifications', color: '#fff', icon: '' },
 ]
+
+const CERTIFICATION_VERIFY_URLS = {
+  'Basics of UI UX': 'https://simpli-web.app.link/e/TKw01bVm10b',
+  'Introduction to Figma': 'https://simpli-web.app.link/e/U5Bwmgcn10b',
+  'Introduction to PHP': 'https://simpli-web.app.link/e/W9orMjen10b',
+  'JavaScript Essentials 1': 'https://www.credly.com/badges/21f0fb1b-894b-4b23-bb7a-818bad20f089/print',
+  'Legacy JavaScript': 'https://www.freecodecamp.org/certification/charlesgarcia/javascript-algorithms-and-data-structures',
+  'Responsive Web Design': 'https://www.freecodecamp.org/certification/charlesgarcia/responsive-web-design'
+}
 
 const dockApps = [
   { id: 'about', name: 'About Me', color: '#fff' },
@@ -262,7 +297,14 @@ function App() {
 
     setMaxZIndex(prevMax => {
       const next = prevMax + 1
-      setPreviewWindow({ image, text, position: { x, y }, size: { width, height }, zIndex: next })
+      setPreviewWindow({
+        image,
+        text,
+        url: CERTIFICATION_VERIFY_URLS[text],
+        position: { x, y },
+        size: { width, height },
+        zIndex: next
+      })
       return next
     })
   }, [])
@@ -494,7 +536,19 @@ function App() {
           onClose={() => setPreviewWindow(null)}
         >
           <PreviewFrame>
-            <PreviewImage src={previewWindow.image} alt={previewWindow.text} />
+            <PreviewImage
+              src={previewWindow.image}
+              alt={previewWindow.text}
+              style={previewWindow.text === 'JavaScript Essentials 1' ? { width: '92%', height: 'auto' } : {}}
+            />
+            {previewWindow.url && (
+              <VerifyButton
+                type="button"
+                onClick={() => window.open(previewWindow.url, '_blank', 'noopener,noreferrer')}
+              >
+                Verify
+              </VerifyButton>
+            )}
           </PreviewFrame>
         </Window>
       )}
