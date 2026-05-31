@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Draggable from 'react-draggable'
 import styled from 'styled-components'
 
@@ -59,6 +59,7 @@ const Label = styled.span`
 function DesktopIcon({ id, icon, name, onClick, color, position, onPositionChange, onDrag }) {
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState(null)
+  const wrapperRef = useRef(null)
 
   const handleDragStart = (e, data) => {
     setIsDragging(true)
@@ -92,13 +93,15 @@ function DesktopIcon({ id, icon, name, onClick, color, position, onPositionChang
 
   return (
     <Draggable
+      nodeRef={wrapperRef}
       position={position || { x: 0, y: 0 }}
       onStart={handleDragStart}
       onDrag={handleDrag}
       onStop={handleDragStop}
       bounds="parent"
     >
-      <IconWrapper 
+      <IconWrapper
+        ref={wrapperRef}
         title={name}
         className={isDragging ? 'dragging' : ''}
         style={{ 

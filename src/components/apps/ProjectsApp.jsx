@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { useState } from 'react'
 import CardSwap, { Card } from './CardSwap'
 
 const Container = styled.div`
@@ -11,6 +12,19 @@ const Container = styled.div`
   align-items: center;
   padding: 0;
   overflow: hidden;
+`
+
+const BgLayer = styled.div`
+  position: absolute;
+  inset: -8px;
+  transition: background-color 280ms ease, opacity 260ms ease;
+  pointer-events: none;
+  z-index: 0;
+`
+
+const Content = styled.div`
+  position: relative;
+  z-index: 2;
 `
 
 const Header = styled.div`
@@ -34,8 +48,24 @@ const Description = styled.p`
 `
 
 function ProjectsApp() {
+  const colors = ['#5A051B', '#174428', '#272E56']
+  const [bgIndex, setBgIndex] = useState(0)
+  const [lastFront, setLastFront] = useState(null)
+
+  const handleFrontChange = idx => {
+    console.debug('ProjectsApp.handleFrontChange called with', idx)
+    if (typeof idx !== 'number') return
+    // Always update bgIndex when a front-change occurs. Previously we
+    // early-returned when idx === bgIndex which caused missed updates
+    // during certain rotation/timing sequences.
+    setLastFront({ idx, t: Date.now() })
+    setBgIndex(idx % colors.length)
+  }
+
   return (
-    <Container>
+    <Container style={{ backgroundColor: colors[bgIndex], transition: 'background-color 260ms ease' }}>
+      <BgLayer style={{ backgroundColor: colors[bgIndex], opacity: 0 }} />
+      <Content>
       <CardSwap
         width={450}
         height={300}
@@ -46,6 +76,7 @@ function ProjectsApp() {
         delay={5000}
         pauseOnHover
         skewAmount={0}
+        onFrontChange={handleFrontChange}
       >
           <Card className="project-card1">
             <img src="/endless-charms-jewelry.webp" alt="Endless Charms" className="card-bg" />
@@ -101,6 +132,8 @@ function ProjectsApp() {
             </div>
           </Card>
       </CardSwap>
+      </Content>
+      {/* debug badge removed */}
     </Container>
   )
 }

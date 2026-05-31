@@ -6,7 +6,7 @@ const DraggableWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  z-index: ${props => props.zIndex || 1000};
+  z-index: ${props => props.$zIndex || 1000};
 `
 
 const WindowWrapper = styled.div`
@@ -318,10 +318,11 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
       onDrag={handleDrag}
       onStop={handleDragStop}
       position={position}
+      nodeRef={wrapperRef}
       bounds={bounds}
       defaultPosition={position || { x: 50 + Math.random() * 30, y: 50 + Math.random() * 30 }}
     >
-      <DraggableWrapper ref={wrapperRef} zIndex={zIndex} onClickCapture={handleClickCapture}>
+      <DraggableWrapper ref={wrapperRef} $zIndex={zIndex} onClickCapture={handleClickCapture}>
         <WindowWrapper
           className={`window-drag-surface ${isMounted && !isClosing ? 'is-open' : ''} ${isClosing ? 'is-closing' : ''}`.trim()}
           width={currentWidth}

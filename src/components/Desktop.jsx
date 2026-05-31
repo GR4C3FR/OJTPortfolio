@@ -141,6 +141,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
   const [isDragging, setIsDragging] = useState(false);
   const [isFolderOpen, setIsFolderOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState(null);
+  const folderRef = React.useRef(null)
 
   // Close folder when certifications window is closed
   useEffect(() => {
@@ -240,13 +241,14 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
   return (
     <DesktopContainer onContextMenu={handleContextMenu} onClick={closeContextMenu}>
       <Draggable
+        nodeRef={folderRef}
         position={folderPosition}
         onStart={handleDragStart}
         onDrag={(e, d) => updateFolderPosition({ x: d.x, y: d.y })}
         onStop={handleDragStop}
         bounds="parent"
       >
-        <FolderWrapper onClick={() => {
+        <FolderWrapper ref={folderRef} onClick={() => {
           if (!isDragging) {
             setIsFolderOpen(!isFolderOpen);
             toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });

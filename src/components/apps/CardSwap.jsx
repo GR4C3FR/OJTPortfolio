@@ -39,6 +39,7 @@ const CardSwap = ({
   delay = 5000,
   pauseOnHover = false,
   onCardClick,
+  onFrontChange,
   skewAmount = 6,
   easing = 'elastic',
   children
@@ -76,61 +77,110 @@ const CardSwap = ({
   const swap = useCallback(() => {
     if (order.current.length < 2) return
 
+    // Ensure DOM refs exist for the current ordering before animating
+    const [front, ...rest] = order.current
+    const elFront = refs[front]?.current
+    const restEls = rest.map(i => refs[i]?.current)
+
+    const missing = []
+    if (!elFront) missing.push(front)
+    restEls.forEach((el, idx) => {
+      if (!el) missing.push(rest[idx])
+    })
+    if (missing.length > 0) {
+      console.error('swap aborted: missing DOM refs for indices', missing, 'order', order.current, 'refsReady', refs.map(r=>!!r.current))
+      return
+    }
+
     if (tlRef.current) {
       tlRef.current.kill()
       tlRef.current = null
     }
 
-    const [front, ...rest] = order.current
-    const elFront = refs[front].current
-    if (!elFront) return
-
     order.current = [...rest, front]
 
-    const tl = gsap.timeline()
-    tlRef.current = tl
+    // Debug: log refs and order before creating timeline
+    try {
+      console.debug('CardSwap.swap preparing', { order: order.current, refsReady: refs.map(r => !!r.current) })
+    } catch (e) {}
 
-    tl.to(elFront, {
-      y: '+=500',
-      duration: config.durDrop,
-      ease: config.ease
-    })
+    let tl
+    try {
+      tl = gsap.timeline()
+      tlRef.current = tl
+    } catch (err) {
+      console.error('GSAP timeline creation failed', { err, order: order.current })
+      return
+    }
+
+    try {
+      tl.to(elFront, {
+        y: '+=500',
+        duration: config.durDrop,
+        ease: config.ease
+      })
+    } catch (err) {
+      console.error('GSAP tl.to failed on elFront', { err, elFront, order: order.current, refsReady: refs.map(r=>!!r.current) })
+      try { tl.kill() } catch (e) {}
+      tlRef.current = null
+      return
+    }
 
     tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`)
+    // notify parent when the next card begins promoting (arriving to front)
+    // NOTE: second argument to tl.call is params (array); pass undefined so the
+    // string label is treated as the position. Passing a string as params
+    // caused GSAP to try iterating the string and throw CreateListFromArrayLike.
+    tl.call(() => onFrontChange?.(order.current[0]), undefined, 'promote')
     rest.forEach((idx, i) => {
-      const el = refs[idx].current
-      if (!el) return
+      const el = refs[idx]?.current
+      if (!el) {
+        console.warn('CardSwap.swap: skipping missing element for idx', idx)
+        return
+      }
       const slot = makeSlot(i, cardDistance, verticalDistance, refs.length)
-      tl.set(el, { zIndex: slot.zIndex }, 'promote')
-      tl.to(
-        el,
-        {
-          x: slot.x,
-          y: slot.y,
-          z: slot.z,
-          duration: config.durMove,
-          ease: config.ease
-        },
-        `promote+=${i * 0.15}`
-      )
+      try {
+        tl.set(el, { zIndex: slot.zIndex }, 'promote')
+        tl.to(
+          el,
+          {
+            x: slot.x,
+            y: slot.y,
+            z: slot.z,
+            duration: config.durMove,
+            ease: config.ease
+          },
+          `promote+=${i * 0.15}`
+        )
+      } catch (err) {
+        console.error('CardSwap.swap: gsap failed for rest element', { err, idx, el })
+      }
     })
 
     const backSlot = makeSlot(refs.length - 1, cardDistance, verticalDistance, refs.length)
     tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`)
     tl.call(() => {
-      gsap.set(elFront, { zIndex: backSlot.zIndex })
+      try {
+        if (elFront) gsap.set(elFront, { zIndex: backSlot.zIndex })
+      } catch (err) {
+        console.error('CardSwap.swap: gsap.set failed on elFront in return', { err, elFront })
+      }
     }, undefined, 'return')
-    tl.to(
-      elFront,
-      {
-        x: backSlot.x,
-        y: backSlot.y,
-        z: backSlot.z,
-        duration: config.durReturn,
-        ease: config.ease
-      },
-      'return'
-    )
+    try {
+      tl.to(
+        elFront,
+        {
+          x: backSlot.x,
+          y: backSlot.y,
+          z: backSlot.z,
+          duration: config.durReturn,
+          ease: config.ease
+        },
+        'return'
+      )
+    } catch (err) {
+      console.error('CardSwap.swap: gsap.to failed on elFront return', { err, elFront })
+    }
 
     tl.eventCallback('onComplete', () => {
       if (tlRef.current === tl) {
@@ -145,6 +195,8 @@ const CardSwap = ({
       if (!r.current) return
       placeNow(r.current, makeSlot(i, cardDistance, verticalDistance, total), skewAmount)
     })
+    // initial front card notify
+    onFrontChange?.(order.current[0])
   }, [refs, cardDistance, verticalDistance, skewAmount])
 
   const rendered = childArr.map((child, i) =>
