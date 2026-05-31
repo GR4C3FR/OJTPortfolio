@@ -19,7 +19,7 @@ const Icon = styled.img`
   height: 67px;
   object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
-  margin-left: 25px;
+  margin-left: 12px;
   margin-bottom: 10px;
 `
 
