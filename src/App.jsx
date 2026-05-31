@@ -364,7 +364,7 @@ function App() {
   const downloadIcon = useMemo(() => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'white' }}>
       <img src="/download.svg" alt="Download resume" style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
-      <span style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'white' }}>Resume</span>
+      <span style={{ fontSize: '0.75rem', fontWeight: 400, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'white', fontFamily: 'Manrope, sans-serif' }}>Resume</span>
     </div>
   ), [])
   

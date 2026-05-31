@@ -58,8 +58,9 @@ const FolderLabel = styled.div`
   color: white;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.5px;
+  font-family: 'Manrope', sans-serif;
 `
 
 const ContextMenu = styled.div`

@@ -47,6 +47,7 @@ const WindowWrapper = styled.div`
 const TitleBar = styled.div`
   background: white;
   color: #1f2937;
+  font-family: 'Manrope', sans-serif;
   padding: 12px 18px;
   display: flex;
   align-items: center;
@@ -61,7 +62,7 @@ const TitleContent = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 600;
+  font-weight: 550;
   font-size: 14px;
   flex: 1;
 `

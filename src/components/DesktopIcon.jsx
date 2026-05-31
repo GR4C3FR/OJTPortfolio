@@ -51,6 +51,8 @@ const Label = styled.span`
   word-break: break-word;
   max-width: 84px;
   line-height: 1.2;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
   pointer-events: none;
 `
 
