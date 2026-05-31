@@ -14,12 +14,12 @@ const TITLE_SIZE = 67
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% + 40px);
-  width: calc(100% + 40px);
-  margin: -20px;
+  height: 100%;
+  width: 100%;
   overflow: auto;
   font-family: 'JetBrains Mono', monospace;
   gap: 20px;
+  box-sizing: border-box;
 `
 
 const ContentLayout = styled.div`
@@ -51,7 +51,7 @@ const HeroImage = styled.img`
   object-fit: cover;
   object-position: ${HERO_IMAGE_POSITION};
   display: block;
-  max-height: 90.3%;
+  max-height: 535px;
 `
 
 const RightPanel = styled.div`
@@ -62,7 +62,7 @@ const RightPanel = styled.div`
   gap: ${RIGHT_PANEL_GAP}px;
   justify-content: flex-start;
   overflow: hidden;
-  padding-right: 20px;
+  padding-right: 10px;
 `
 
 const Section = styled.div`
@@ -79,6 +79,7 @@ const Title = styled.h2`
   margin: 0;
   letter-spacing: -2px;
   text-transform: uppercase;
+  overflow-wrap: break-word;
 `
 
 const Subtitle = styled.h3`
@@ -98,12 +99,10 @@ const Placeholder = styled.div`
 `
 
 const TemporaryText = styled.div`
-  padding: 20px;
   color: #4b5563;
   font-size: 14px;
   line-height: 1.6;
-  border-radius: 8px;
-  margin: -40px 20px 30px 20px;
+  margin: 0 20px 60px 20px;
   flex: 0 0 auto;
   
   p {
