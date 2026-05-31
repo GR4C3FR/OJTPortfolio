@@ -16,6 +16,8 @@ import CertificationsApp from './apps/CertificationsApp'
 import FigmaApp from './apps/FigmaApp'
 import FramerApp from './apps/FramerApp'
 
+const EmptyApp = () => null
+
 const DesktopContainer = styled.div`
   flex: 1;
   padding: 20px;
@@ -120,21 +122,27 @@ const appComponents = {
   photoshop: PhotoshopApp,
   lightroom: LightroomApp,
   certifications: CertificationsApp,
+  others: EmptyApp,
 }
 
-function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition, onOpenPreview }) {
+function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition, othersFolderPosition, updateOthersFolderPosition, onOpenPreview }) {
   const [dragStart, setDragStart] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isFolderOpen, setIsFolderOpen] = useState(false);
+  const [isOthersFolderOpen, setIsOthersFolderOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState(null);
   const folderRef = React.useRef(null)
+  const othersFolderRef = React.useRef(null)
 
-  // Close folder when certifications window is closed or begins closing
+  // Close folder when certifications or others window is closed or begins closing
   useEffect(() => {
     if (!openApps['certifications'] || closingApps['certifications']) {
       setIsFolderOpen(false);
     }
-  }, [openApps['certifications'], closingApps['certifications']]);
+    if (!openApps['others'] || closingApps['others']) {
+      setIsOthersFolderOpen(false);
+    }
+  }, [openApps['certifications'], closingApps['certifications'], openApps['others'], closingApps['others']]);
 
   const handleDragStart = (e, d) => {
     setDragStart({ x: d.x, y: d.y });
@@ -161,6 +169,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
       'contact',
       'separator',
       'certifications',
+      'others',
       'separator',
       'photoshop',
       'illustrator',
@@ -183,6 +192,9 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
     const app = allApps.find(a => a.id === appId);
     if (appId === 'certifications') {
       setIsFolderOpen(true);
+    }
+    if (appId === 'others') {
+      setIsOthersFolderOpen(true);
     }
     if (openApps[appId]) {
       // If already open, just bring to front
@@ -258,6 +270,47 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
           <FolderLabel>Certifications</FolderLabel>
         </FolderWrapper>
       </Draggable>
+      <Draggable
+        nodeRef={othersFolderRef}
+        position={othersFolderPosition}
+        onStart={(e, d) => {
+          setDragStart({ x: d.x, y: d.y });
+        }}
+        onDrag={(e, d) => updateOthersFolderPosition({ x: d.x, y: d.y })}
+        onStop={(e, d) => {
+          if (dragStart) {
+            const distance = Math.hypot(d.x - dragStart.x, d.y - dragStart.y);
+            if (distance > 5) {
+              setIsDragging(true);
+              setTimeout(() => setIsDragging(false), 100);
+            }
+          }
+          updateOthersFolderPosition({ x: d.x, y: d.y });
+          setDragStart(null);
+        }}
+        bounds="parent"
+      >
+        <FolderWrapper ref={othersFolderRef} onClick={() => {
+          if (!isDragging) {
+            setIsOthersFolderOpen(!isOthersFolderOpen);
+            toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
+          }
+        }}>
+          <Folder 
+            color="#F8D775" 
+            size={0.4} 
+            items={[]} 
+            isDragging={isDragging}
+            isOpen={isOthersFolderOpen}
+            onOpenChange={setIsOthersFolderOpen}
+            onPaperClick={() => {
+              setIsOthersFolderOpen(false);
+              toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
+            }}
+          />
+          <FolderLabel>OTHERS</FolderLabel>
+        </FolderWrapper>
+      </Draggable>
       {desktopIcons.map((app) => (
         <DesktopIcon
           key={app.id}
@@ -281,7 +334,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
             color={allApps.find(i => i.id === appId)?.color || '#fff'}
             dragHandleSelector=".window-drag-surface"
             onClose={() => closeApp(appId)}
-            onCloseStart={appId === 'certifications' ? () => setIsFolderOpen(false) : undefined}
+            onCloseStart={appId === 'certifications' ? () => setIsFolderOpen(false) : appId === 'others' ? () => setIsOthersFolderOpen(false) : undefined}
             closing={!!closingApps[appId]}
             position={windowPositions[appId] || getNextPosition(appId)}
             onPositionChange={(pos) => updateWindowPosition(appId, pos)}

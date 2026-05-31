@@ -65,6 +65,7 @@ const allApps = [
   { id: 'photoshop', name: 'Adobe Photoshop', color: '#303030', icon: '' },
   { id: 'lightroom', name: 'Adobe Lightroom Classic', color: '#303030', icon: '' },
   { id: 'certifications', name: 'Certifications', color: '#fff', icon: '' },
+  { id: 'others', name: 'OTHERS', color: '#fff', icon: '' },
 ]
 
 const CERTIFICATION_VERIFY_URLS = {
@@ -121,6 +122,12 @@ const getInitialFolderPosition = () => {
   return { x: window.innerWidth - 150, y: 0 }
 }
 
+const getInitialOthersFolderPosition = () => {
+  if (typeof window === 'undefined') return { x: 0, y: 120 }
+  const folderPos = getInitialFolderPosition()
+  return { x: folderPos.x, y: folderPos.y + 120 }
+}
+
 const getSavedState = (key, fallback) => {
   if (typeof window === 'undefined') return fallback
   try {
@@ -160,7 +167,9 @@ function App() {
       ...saved,
       framer: { width: 400, height: 200 },
       ...saved,
-        certifications: { width: 800, height: 400 },
+      certifications: { width: 800, height: 400 },
+      ...saved,
+      others: { width: 800, height: 400 },
     }
   })
   const [windowZIndex, setWindowZIndex] = useState({})
@@ -168,6 +177,7 @@ function App() {
   const [previewWindow, setPreviewWindow] = useState(null)
   const [iconPositions, setIconPositions] = useState(getInitialIconPositions())
   const [folderPosition, setFolderPosition] = useState(getInitialFolderPosition())
+  const [othersFolderPosition, setOthersFolderPosition] = useState(getInitialOthersFolderPosition)
 
   // Save to localStorage when positions or sizes change
   useEffect(() => {
@@ -278,6 +288,42 @@ function App() {
       ...prev,
       [appId]: size
     }))
+  }
+
+  const updateOthersFolderPosition = (newPosition) => {
+    const FOLDER_SIZE = 80
+    const ICON_SIZE = 80
+
+    const checkOverlap = (rect1, rect2) => {
+      const padding = 10
+      return !(
+        rect1.x + rect1.width + padding < rect2.x ||
+        rect2.x + rect2.width + padding < rect1.x ||
+        rect1.y + rect1.height + padding < rect2.y ||
+        rect2.y + rect2.height + padding < rect1.y
+      )
+    }
+
+    const hasIconOverlap = (x, y) => {
+      return Object.entries(iconPositions).some(([id, pos]) => {
+        const rect1 = { x, y, width: FOLDER_SIZE, height: FOLDER_SIZE }
+        const rect2 = { x: pos.x, y: pos.y, width: ICON_SIZE, height: ICON_SIZE }
+        return checkOverlap(rect1, rect2)
+      })
+    }
+
+    const hasCertificationsFolderOverlap = (x, y) => {
+      const rect1 = { x, y, width: FOLDER_SIZE, height: FOLDER_SIZE }
+      const rect2 = { x: folderPosition.x, y: folderPosition.y, width: FOLDER_SIZE, height: FOLDER_SIZE }
+      return checkOverlap(rect1, rect2)
+    }
+
+    if (!hasIconOverlap(newPosition.x, newPosition.y) && !hasCertificationsFolderOverlap(newPosition.x, newPosition.y)) {
+      setOthersFolderPosition(prev => ({
+        ...prev,
+        ...newPosition
+      }))
+    }
   }
 
   const bringToFront = (appId) => {
@@ -518,6 +564,8 @@ function App() {
         updateIconPositionDrag={updateIconPositionDrag}
         folderPosition={folderPosition}
         updateFolderPosition={updateFolderPosition}
+        othersFolderPosition={othersFolderPosition}
+        updateOthersFolderPosition={updateOthersFolderPosition}
         onOpenPreview={openPreviewWindow}
       />
       {previewWindow && (

@@ -49,7 +49,7 @@ function PhotoshopApp() {
     <Container>
       <Icon src="/photoshop.svg" alt="Photoshop" />
       <Right>
-        <Title>I made this desktop background in Photoshop.</Title>
+        <Title>I made this desktop wallpaper in Photoshop.</Title>
         <Description />
       </Right>
     </Container>
