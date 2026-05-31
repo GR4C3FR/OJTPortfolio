@@ -80,6 +80,7 @@ const getSavedState = (key, fallback) => {
 
 function App() {
   const [openApps, setOpenApps] = useState({})
+  const [closingApps, setClosingApps] = useState({})
   const [windowPositions, setWindowPositions] = useState(() => getSavedState('windowPositions', {}))
   const [windowSizes, setWindowSizes] = useState(() => {
     const saved = getSavedState('windowSizes', {})
@@ -144,21 +145,40 @@ function App() {
     return { x, y }
   }
 
+  const closeApp = useCallback((appId) => {
+    // mark as closing so Window can play its animation
+    setClosingApps(prev => ({ ...prev, [appId]: true }))
+    // after animation duration, actually close
+    const ANIM_MS = 200
+    setTimeout(() => {
+      setOpenApps(prev => ({ ...prev, [appId]: false }))
+      setClosingApps(prev => {
+        const copy = { ...prev }
+        delete copy[appId]
+        return copy
+      })
+    }, ANIM_MS)
+  }, [])
+
   const toggleApp = useCallback((appId, appData) => {
     setOpenApps(prev => {
       const wasOpen = !!prev[appId]
-      const newState = { ...prev, [appId]: !wasOpen }
+      // If it was open, trigger animated close
+      if (wasOpen) {
+        closeApp(appId)
+        return prev
+      }
+
+      const newState = { ...prev, [appId]: true }
 
       // When opening a new app, bring it to front and save initial position
       if (newState[appId] && !wasOpen) {
-        // Increment global max z-index and assign to this window
         setMaxZIndex(prevMax => {
           const next = prevMax + 1
           setWindowZIndex(prevZ => ({ ...prevZ, [appId]: next }))
           return next
         })
 
-        // Save initial position immediately so it doesn't change when other windows open
         if (!windowPositions[appId]) {
           const initialPos = getNextPosition(appId)
           setWindowPositions(prevPos => ({
@@ -168,22 +188,10 @@ function App() {
         }
       }
 
-      // If app is already open and user clicks its icon, bring it to front instead of closing
-      if (wasOpen && !newState[appId]) {
-        // If the intent was to focus the window, reopen and bring to front
-        // (keep default toggle behavior - do nothing special here)
-      }
-
       return newState
     })
-  }, [windowZIndex, windowPositions, getNextPosition])
-
-  const closeApp = (appId) => {
-    setOpenApps(prev => ({
-      ...prev,
-      [appId]: false
-    }))
-  }
+  }, [closeApp, windowPositions, getNextPosition])
+ 
 
   const updateWindowPosition = (appId, position) => {
     setWindowPositions(prev => ({
@@ -395,6 +403,7 @@ function App() {
         openApps={openApps} 
         toggleApp={toggleApp} 
         closeApp={closeApp} 
+        closingApps={closingApps}
         allApps={[...allApps, ...dockApps]} 
         windowPositions={windowPositions} 
         updateWindowPosition={updateWindowPosition} 

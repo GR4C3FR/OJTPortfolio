@@ -135,7 +135,7 @@ const appColors = {
   certifications: '#f39c12',
 }
 
-function Desktop({ openApps, toggleApp, closeApp, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition }) {
+function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition }) {
   const [dragStart, setDragStart] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isFolderOpen, setIsFolderOpen] = useState(false);
@@ -288,6 +288,7 @@ function Desktop({ openApps, toggleApp, closeApp, allApps, windowPositions, upda
             icon={allApps.find(i => i.id === appId).icon}
             color={appColors[appId]}
             onClose={() => closeApp(appId)}
+            closing={!!closingApps[appId]}
             position={windowPositions[appId] || getNextPosition(appId)}
             onPositionChange={(pos) => updateWindowPosition(appId, pos)}
             size={windowSizes[appId]}

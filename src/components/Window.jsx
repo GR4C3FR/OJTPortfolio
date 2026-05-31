@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Draggable from 'react-draggable'
 import styled from 'styled-components'
 
@@ -21,6 +21,22 @@ const WindowWrapper = styled.div`
   touch-action: manipulation;
   position: relative;
   user-select: none;
+
+  /* open/close scale + fade animation */
+  transform-origin: center center;
+  transform: scale(0.96);
+  opacity: 0;
+  transition: transform 180ms ease, opacity 180ms ease;
+
+  &.is-open {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  &.is-closing {
+    transform: scale(0.96);
+    opacity: 0;
+  }
 
   @media (max-width: 768px) {
     min-width: 90vw;
@@ -137,8 +153,10 @@ const ResizeHandle = styled.div`
   }
 `
 
-function Window({ id, title, icon, color, children, onClose, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown }) {
+function Window({ id, title, icon, color, children, onClose, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown, closing = false }) {
   const [isResizing, setIsResizing] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
   const resizeStartPos = useRef({ x: 0, y: 0 })
   const resizeStartSize = useRef({ width: 0, height: 0 })
   const dragStartPos = useRef({ x: 0, y: 0 })
@@ -146,6 +164,18 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
   const wrapperRef = useRef(null)
   const contentRef = useRef(null)
   const ignoreDragStartRef = useRef(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsMounted(true), 10)
+    return () => clearTimeout(t)
+  }, [])
+
+  // React to external close requests by playing the close animation
+  useEffect(() => {
+    if (closing) {
+      setIsClosing(true)
+    }
+  }, [closing])
 
   const handleDrag = (e, data) => {
     // Calculate if we've moved significantly
@@ -241,6 +271,16 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
     return true
   }
 
+  const handleCloseClick = (e) => {
+    e && e.stopPropagation()
+    if (isClosing) return
+    setIsClosing(true)
+    const ANIM_MS = 180
+    setTimeout(() => {
+      onClose && onClose()
+    }, ANIM_MS)
+  }
+
   const handleClickCapture = (e) => {
     // Prevent clicks on buttons/links if the window was just dragged
     if (wasDragged.current) {
@@ -282,7 +322,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
     >
       <DraggableWrapper ref={wrapperRef} zIndex={zIndex} onClickCapture={handleClickCapture}>
         <WindowWrapper
-          className="window-drag-surface"
+          className={`window-drag-surface ${isMounted && !isClosing ? 'is-open' : ''} ${isClosing ? 'is-closing' : ''}`.trim()}
           width={currentWidth}
           height={currentHeight}
           onMouseDownCapture={handleWindowMouseDownCapture}
@@ -294,7 +334,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
               <span>{title}</span>
             </TitleContent>
             <Controls>
-              <Button onClick={onClose} title="Close">
+              <Button onClick={handleCloseClick} title="Close">
                 ✕
               </Button>
             </Controls>
