@@ -57,7 +57,7 @@
 
 /* Example per-card styling — adjust these to taste */
 .project-card1 {
-  border: 1px solid black;
+  border: 1px solid white;
   background: black;
   color: black;
 }
@@ -167,13 +167,13 @@
 .card-button.button-ss:hover { background: #f5f7ff; }
 
 .project-card2 {
-  border: 1px solid black;
+  border: 1px solid white;
   background: black;
   color: black;
 }
 
 .project-card3 {
-  border: 1px solid black;
+  border: 1px solid white;
   background: black;
   color: black;
 }

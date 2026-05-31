@@ -22,6 +22,19 @@ const BgLayer = styled.div`
   z-index: 0;
 `
 
+const GridLayer = styled.div`
+  position: absolute;
+  inset: -8px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.28) 1px, transparent 1px);
+  background-size: 30px 30px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));
+`
+
 const Content = styled.div`
   position: relative;
   z-index: 2;
@@ -48,23 +61,22 @@ const Description = styled.p`
 `
 
 function ProjectsApp() {
-  const colors = ['#5A051B', '#174428', '#272E56']
+  const colors = ['#b60b39', '#40bd70', '#334acd']
   const [bgIndex, setBgIndex] = useState(0)
-  const [lastFront, setLastFront] = useState(null)
 
   const handleFrontChange = idx => {
     console.debug('ProjectsApp.handleFrontChange called with', idx)
-    if (typeof idx !== 'number') return
+    if (typeof idx !== 'number') return 
     // Always update bgIndex when a front-change occurs. Previously we
     // early-returned when idx === bgIndex which caused missed updates
     // during certain rotation/timing sequences.
-    setLastFront({ idx, t: Date.now() })
     setBgIndex(idx % colors.length)
   }
 
   return (
     <Container style={{ backgroundColor: colors[bgIndex], transition: 'background-color 260ms ease' }}>
       <BgLayer style={{ backgroundColor: colors[bgIndex], opacity: 0 }} />
+      <GridLayer />
       <Content>
       <CardSwap
         width={450}
@@ -133,7 +145,6 @@ function ProjectsApp() {
           </Card>
       </CardSwap>
       </Content>
-      {/* debug badge removed */}
     </Container>
   )
 }
