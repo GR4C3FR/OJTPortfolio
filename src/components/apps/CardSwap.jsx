@@ -34,6 +34,8 @@ const CardSwap = ({
   height = 400,
   cardDistance = 60,
   verticalDistance = 70,
+  offsetX = 0,
+  offsetY = 0,
   delay = 5000,
   pauseOnHover = false,
   onCardClick,
@@ -46,6 +48,8 @@ const CardSwap = ({
   const order = useRef(Array.from({ length: childArr.length }, (_, i) => i))
   const tlRef = useRef(null)
   const container = useRef(null)
+  const pressStartRef = useRef(null)
+  const dragThreshold = 6
 
   const config = useMemo(() => {
     if (easing === 'elastic') {
@@ -149,17 +153,37 @@ const CardSwap = ({
           key: i,
           ref: refs[i],
           style: { width, height, ...(child.props.style ?? {}) },
+          onMouseDown: e => {
+            pressStartRef.current = { x: e.clientX, y: e.clientY }
+            child.props.onMouseDown?.(e)
+          },
           onClick: e => {
             child.props.onClick?.(e)
             onCardClick?.(i)
-            swap()
+            const start = pressStartRef.current
+            const movedDistance = start ? Math.hypot(e.clientX - start.x, e.clientY - start.y) : 0
+
+            pressStartRef.current = null
+
+            if (movedDistance <= dragThreshold) {
+              swap()
+            }
           }
         })
       : child
   )
 
   return (
-    <div ref={container} className="card-swap-container" style={{ width, height }}>
+    <div
+      ref={container}
+      className="card-swap-container"
+      style={{
+        width,
+        height,
+        '--card-swap-offset-x': `${offsetX}px`,
+        '--card-swap-offset-y': `${offsetY}px`
+      }}
+    >
       {rendered}
     </div>
   )

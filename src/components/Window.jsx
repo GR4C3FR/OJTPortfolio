@@ -144,6 +144,8 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
   const dragStartPos = useRef({ x: 0, y: 0 })
   const wasDragged = useRef(false)
   const wrapperRef = useRef(null)
+  const contentRef = useRef(null)
+  const ignoreDragStartRef = useRef(false)
 
   const handleDrag = (e, data) => {
     // Calculate if we've moved significantly
@@ -178,6 +180,67 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
     }
   }
 
+  const isScrollableElement = (element) => {
+    if (!element || element === document.body) return false
+
+    const style = window.getComputedStyle(element)
+    const overflowY = style.overflowY
+    const canScrollY = overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay'
+
+    return canScrollY && element.scrollHeight > element.clientHeight
+  }
+
+  const isScrollbarInteraction = (e) => {
+    const content = contentRef.current
+    if (!content) return false
+
+    let current = e.target instanceof Element ? e.target : null
+
+    while (current && content.contains(current)) {
+      if (isScrollableElement(current)) {
+        const bounds = current.getBoundingClientRect()
+        const scrollbarWidth = Math.max(current.offsetWidth - current.clientWidth, 12)
+        if (e.clientX >= bounds.right - scrollbarWidth && e.clientX <= bounds.right) {
+          return true
+        }
+      }
+
+      current = current.parentElement
+    }
+
+    return false
+  }
+
+  const handleContentMouseDownCapture = (e) => {
+    if (isScrollbarInteraction(e)) {
+      ignoreDragStartRef.current = true
+      e.stopPropagation()
+      return
+    }
+
+    onMouseDown && onMouseDown(e)
+  }
+
+  const handleWindowMouseDownCapture = (e) => {
+    ignoreDragStartRef.current = isScrollbarInteraction(e)
+  }
+
+  const handleWindowMouseUpCapture = () => {
+    ignoreDragStartRef.current = false
+  }
+
+  const handleDraggableStart = (e) => {
+    if (ignoreDragStartRef.current || isScrollbarInteraction(e)) {
+      return false
+    }
+
+    handleMouseDown(e)
+    handleDragStart(e)
+    onMouseDown && onMouseDown(e)
+
+    return true
+  }
+
   const handleClickCapture = (e) => {
     // Prevent clicks on buttons/links if the window was just dragged
     if (wasDragged.current) {
@@ -208,23 +271,24 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
 
   return (
     <Draggable 
-      handle=".title-bar"
+      handle=".window-drag-surface"
       cancel="button, a, input, textarea, select"
+      onStart={handleDraggableStart}
       onDrag={handleDrag}
       onStop={handleDragStop}
       position={position}
       bounds={bounds}
       defaultPosition={position || { x: 50 + Math.random() * 30, y: 50 + Math.random() * 30 }}
     >
-      <DraggableWrapper ref={wrapperRef} zIndex={zIndex} onMouseDown={(e) => {
-        handleMouseDown(e)
-        onMouseDown && onMouseDown(e)
-      }} onDragStart={handleDragStart} onClickCapture={handleClickCapture}>
-        <WindowWrapper width={currentWidth} height={currentHeight} onDragStart={handleDragStart} onMouseDown={(e) => {
-          // Bring window to front on any click within it
-          onMouseDown && onMouseDown(e)
-        }}>
-          <TitleBar className="title-bar" color={color} onMouseDown={onMouseDown}>
+      <DraggableWrapper ref={wrapperRef} zIndex={zIndex} onClickCapture={handleClickCapture}>
+        <WindowWrapper
+          className="window-drag-surface"
+          width={currentWidth}
+          height={currentHeight}
+          onMouseDownCapture={handleWindowMouseDownCapture}
+          onMouseUpCapture={handleWindowMouseUpCapture}
+        >
+          <TitleBar color={color} onMouseDown={onMouseDown}>
             <TitleContent>
               <Icon>{icon}</Icon>
               <span>{title}</span>
@@ -235,7 +299,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
               </Button>
             </Controls>
           </TitleBar>
-          <Content onMouseDown={(e) => {
+          <Content ref={contentRef} onMouseDownCapture={handleContentMouseDownCapture} onMouseDown={(e) => {
             // Bring window to front when clicking on content
             onMouseDown && onMouseDown(e)
           }}>{children}</Content>
