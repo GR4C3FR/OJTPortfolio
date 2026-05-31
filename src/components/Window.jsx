@@ -37,7 +37,7 @@ const TitleBar = styled.div`
   justify-content: space-between;
   user-select: none;
   border-radius: 8px 8px 0 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #cbcbcb;
   flex-shrink: 0;
 `
 
