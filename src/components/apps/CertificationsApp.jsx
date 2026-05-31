@@ -47,7 +47,6 @@ function CertificationsApp() {
 
   return (
     <Container>
-      <Title>Certifications</Title>
       <CertificationsList>
         {certifications.map((cert, index) => (
           <CertificationItem key={index}>
