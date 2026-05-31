@@ -129,12 +129,12 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
   const [contextMenu, setContextMenu] = useState(null);
   const folderRef = React.useRef(null)
 
-  // Close folder when certifications window is closed
+  // Close folder when certifications window is closed or begins closing
   useEffect(() => {
-    if (!openApps['certifications']) {
+    if (!openApps['certifications'] || closingApps['certifications']) {
       setIsFolderOpen(false);
     }
-  }, [openApps['certifications']]);
+  }, [openApps['certifications'], closingApps['certifications']]);
 
   const handleDragStart = (e, d) => {
     setDragStart({ x: d.x, y: d.y });
@@ -181,6 +181,9 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
 
   const handleContextMenuClick = (appId) => {
     const app = allApps.find(a => a.id === appId);
+    if (appId === 'certifications') {
+      setIsFolderOpen(true);
+    }
     if (openApps[appId]) {
       // If already open, just bring to front
       bringToFront(appId);
@@ -276,8 +279,9 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
             title={allApps.find(i => i.id === appId).name}
             icon={allApps.find(i => i.id === appId).icon}
             color={allApps.find(i => i.id === appId)?.color || '#fff'}
-            dragHandleSelector={appId === 'certifications' ? '.window-titlebar-drag-surface' : '.window-drag-surface'}
+            dragHandleSelector=".window-drag-surface"
             onClose={() => closeApp(appId)}
+            onCloseStart={appId === 'certifications' ? () => setIsFolderOpen(false) : undefined}
             closing={!!closingApps[appId]}
             position={windowPositions[appId] || getNextPosition(appId)}
             onPositionChange={(pos) => updateWindowPosition(appId, pos)}

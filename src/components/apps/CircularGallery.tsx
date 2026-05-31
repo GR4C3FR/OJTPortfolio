@@ -378,6 +378,7 @@ class App {
 
   isDown = false
   start = 0
+  isDragging = false
 
   constructor(
     container: HTMLElement,
@@ -478,6 +479,7 @@ class App {
 
   onTouchDown(e: MouseEvent | TouchEvent) {
     this.isDown = true
+    this.isDragging = false
     this.scroll.position = this.scroll.current
     this.start = 'touches' in e ? e.touches[0].clientX : e.clientX
   }
@@ -486,6 +488,9 @@ class App {
     if (!this.isDown) return
     const x = 'touches' in e ? e.touches[0].clientX : e.clientX
     const distance = (this.start - x) * (this.scrollSpeed * 0.02)
+    if (Math.abs(distance) > 2) {
+      this.isDragging = true
+    }
     this.scroll.target = (this.scroll.position ?? 0) + distance
   }
 
@@ -505,6 +510,7 @@ class App {
   }
 
   onClick(e: MouseEvent) {
+    if (this.isDragging) return
     const media = this.getMediaAtPoint(e.clientX, e.clientY)
     if (!media) return
     this.onItemClick?.({ image: media.image, text: media.text })

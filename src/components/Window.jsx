@@ -154,7 +154,7 @@ const ResizeHandle = styled.div`
   }
 `
 
-function Window({ id, title, icon, color, children, onClose, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown, closing = false, dragHandleSelector = '.window-drag-surface' }) {
+function Window({ id, title, icon, color, children, onClose, onCloseStart, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown, closing = false, dragHandleSelector = '.window-drag-surface' }) {
   const [isResizing, setIsResizing] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
@@ -274,6 +274,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
   const handleCloseClick = (e) => {
     e && e.stopPropagation()
     if (isClosing) return
+    onCloseStart && onCloseStart()
     setIsClosing(true)
     const ANIM_MS = 180
     setTimeout(() => {
@@ -312,7 +313,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
   return (
     <Draggable 
       handle={dragHandleSelector}
-      cancel="button, a, input, textarea, select"
+      cancel="button, a, input, textarea, select, .circular-gallery, .circular-gallery *"
       onStart={handleDraggableStart}
       onDrag={handleDrag}
       onStop={handleDragStop}
