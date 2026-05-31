@@ -93,6 +93,18 @@ function App() {
       skills: { width: 600, height: 640 },
       ...saved,
       contact: { width: 600, height: 500 },
+      ...saved,
+      photoshop: { width: 400, height: 200 },
+      ...saved,
+      illustrator: { width: 400, height: 200 },
+      ...saved,
+      lightroom: { width: 400, height: 200 },
+      ...saved,
+      davinci: { width: 400, height: 200 },
+      ...saved,
+      figma: { width: 400, height: 200 },
+      ...saved,
+      framer: { width: 400, height: 200 },
     }
   })
   const [windowZIndex, setWindowZIndex] = useState({})
