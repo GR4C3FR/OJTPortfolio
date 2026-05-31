@@ -122,20 +122,6 @@ const appComponents = {
   certifications: CertificationsApp,
 }
 
-const appColors = {
-  about: '#3498db',
-  projects: '#e74c3c',
-  skills: '#2ecc71',
-  contact: '#f39c12',
-  davinci: '#222222',
-  figma: '#000000',
-  framer: '#000000',
-  illustrator: '#FF9500',
-  photoshop: '#31A8FF',
-  lightroom: '#31A8FF',
-  certifications: '#f39c12',
-}
-
 function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition }) {
   const [dragStart, setDragStart] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -289,7 +275,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
             id={appId}
             title={allApps.find(i => i.id === appId).name}
             icon={allApps.find(i => i.id === appId).icon}
-            color={appColors[appId]}
+            color={allApps.find(i => i.id === appId)?.color || '#fff'}
             onClose={() => closeApp(appId)}
             closing={!!closingApps[appId]}
             position={windowPositions[appId] || getNextPosition(appId)}

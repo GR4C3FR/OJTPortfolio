@@ -12,7 +12,7 @@ const DraggableWrapper = styled.div`
 const WindowWrapper = styled.div`
   width: ${props => props.width}px;
   height: ${props => props.height}px;
-  background: white;
+  background: ${props => props.$color || 'white'};
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -45,8 +45,8 @@ const WindowWrapper = styled.div`
 `
 
 const TitleBar = styled.div`
-  background: white;
-  color: #1f2937;
+  background: ${props => props.$color || 'white'};
+  color: ${props => (props.$color && props.$color.toLowerCase() !== '#fff' ? '#f9fafb' : '#1f2937')};
   font-family: 'Manrope', sans-serif;
   padding: 12px 18px;
   display: flex;
@@ -54,7 +54,7 @@ const TitleBar = styled.div`
   justify-content: space-between;
   user-select: none;
   border-radius: 8px 8px 0 0;
-  border-bottom: 1px solid #cbcbcb;
+  border-bottom: 1px solid ${props => (props.$color && props.$color.toLowerCase() !== '#fff' ? 'rgba(255,255,255,0.2)' : '#cbcbcb')};
   flex-shrink: 0;
 `
 
@@ -106,7 +106,7 @@ const Content = styled.div`
   flex: 1;
   overflow-y: auto;
   // padding: 20px;
-  background: white;
+  background: ${props => props.$color || 'white'};
   pointer-events: auto;
   user-select: text;
 
@@ -325,12 +325,13 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
       <DraggableWrapper ref={wrapperRef} $zIndex={zIndex} onClickCapture={handleClickCapture}>
         <WindowWrapper
           className={`window-drag-surface ${isMounted && !isClosing ? 'is-open' : ''} ${isClosing ? 'is-closing' : ''}`.trim()}
+          $color={color}
           width={currentWidth}
           height={currentHeight}
           onMouseDownCapture={handleWindowMouseDownCapture}
           onMouseUpCapture={handleWindowMouseUpCapture}
         >
-          <TitleBar color={color} onMouseDown={onMouseDown}>
+          <TitleBar $color={color} onMouseDown={onMouseDown}>
             <TitleContent>
               <Icon>{icon}</Icon>
               <span>{title}</span>
@@ -341,7 +342,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
               </Button>
             </Controls>
           </TitleBar>
-          <Content ref={contentRef} onMouseDownCapture={handleContentMouseDownCapture} onMouseDown={(e) => {
+          <Content $color={color} ref={contentRef} onMouseDownCapture={handleContentMouseDownCapture} onMouseDown={(e) => {
             // Bring window to front when clicking on content
             onMouseDown && onMouseDown(e)
           }}>{children}</Content>

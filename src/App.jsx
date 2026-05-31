@@ -13,12 +13,12 @@ const AppContainer = styled.div`
 `
 
 const allApps = [
-  { id: 'davinci', name: 'DaVinci Resolve', color: '#fff', icon: '' },
-  { id: 'figma', name: 'Figma', color: '#fff', icon: '' },
-  { id: 'framer', name: 'Framer', color: '#fff', icon: '' },
-  { id: 'illustrator', name: 'Adobe Illustrator', color: '#fff', icon: '' },
-  { id: 'photoshop', name: 'Adobe Photoshop', color: '#fff', icon: '' },
-  { id: 'lightroom', name: 'Adobe Lightroom Classic', color: '#fff', icon: '' },
+  { id: 'davinci', name: 'DaVinci Resolve', color: '#303030', icon: '' },
+  { id: 'figma', name: 'Figma', color: '#303030', icon: '' },
+  { id: 'framer', name: 'Framer', color: '#303030', icon: '' },
+  { id: 'illustrator', name: 'Adobe Illustrator', color: '#303030', icon: '' },
+  { id: 'photoshop', name: 'Adobe Photoshop', color: '#303030', icon: '' },
+  { id: 'lightroom', name: 'Adobe Lightroom Classic', color: '#303030', icon: '' },
   { id: 'certifications', name: 'Certifications', color: '#fff', icon: '' },
 ]
 
