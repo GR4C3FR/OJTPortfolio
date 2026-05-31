@@ -217,7 +217,7 @@ const Status = styled.div`
   font-size: 0.72rem;
   line-height: 1.5;
   background: ${({ $tone }) => ($tone === 'success' ? 'rgba(34, 197, 94, 0.12)' : 'rgba(239, 68, 68, 0.12)')};
-  color: ${({ $tone }) => ($tone === 'success' ? '#166534' : '#991b1b')};
+  color: ${({ $tone }) => ($tone === 'success' ? '#22c55e' : '#991b1b')};
   border: 1px solid ${({ $tone }) => ($tone === 'success' ? 'rgba(34, 197, 94, 0.22)' : 'rgba(239, 68, 68, 0.22)')};
 `
 
