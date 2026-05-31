@@ -16,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: url('/background.webp') center/cover no-repeat fixed;
+    background: url('/background.png') center/cover no-repeat fixed;
     min-height: 100vh;
     overflow: hidden;
   }
