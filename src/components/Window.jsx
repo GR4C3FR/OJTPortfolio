@@ -154,7 +154,7 @@ const ResizeHandle = styled.div`
   }
 `
 
-function Window({ id, title, icon, color, children, onClose, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown, closing = false }) {
+function Window({ id, title, icon, color, children, onClose, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown, closing = false, dragHandleSelector = '.window-drag-surface' }) {
   const [isResizing, setIsResizing] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
@@ -167,8 +167,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
   const ignoreDragStartRef = useRef(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setIsMounted(true), 10)
-    return () => clearTimeout(t)
+    setIsMounted(true)
   }, [])
 
   // React to external close requests by playing the close animation
@@ -312,7 +311,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
 
   return (
     <Draggable 
-      handle=".window-drag-surface"
+      handle={dragHandleSelector}
       cancel="button, a, input, textarea, select"
       onStart={handleDraggableStart}
       onDrag={handleDrag}
@@ -331,7 +330,7 @@ function Window({ id, title, icon, color, children, onClose, position, onPositio
           onMouseDownCapture={handleWindowMouseDownCapture}
           onMouseUpCapture={handleWindowMouseUpCapture}
         >
-          <TitleBar $color={color} onMouseDown={onMouseDown}>
+          <TitleBar $color={color} className="window-titlebar-drag-surface" onMouseDown={onMouseDown}>
             <TitleContent>
               <Icon>{icon}</Icon>
               <span>{title}</span>

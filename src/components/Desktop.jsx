@@ -122,7 +122,7 @@ const appComponents = {
   certifications: CertificationsApp,
 }
 
-function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition }) {
+function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition, onOpenPreview }) {
   const [dragStart, setDragStart] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isFolderOpen, setIsFolderOpen] = useState(false);
@@ -276,6 +276,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
             title={allApps.find(i => i.id === appId).name}
             icon={allApps.find(i => i.id === appId).icon}
             color={allApps.find(i => i.id === appId)?.color || '#fff'}
+            dragHandleSelector={appId === 'certifications' ? '.window-titlebar-drag-surface' : '.window-drag-surface'}
             onClose={() => closeApp(appId)}
             closing={!!closingApps[appId]}
             position={windowPositions[appId] || getNextPosition(appId)}
@@ -285,7 +286,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
             zIndex={windowZIndex[appId] || 1000}
             onMouseDown={() => bringToFront(appId)}
           >
-            {React.createElement(appComponents[appId])}
+            {React.createElement(appComponents[appId], { onOpenPreview })}
           </Window>
         )
       )}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import styled from 'styled-components'
 import Desktop from './components/Desktop'
 import Dock from './components/Dock'
+import Window from './components/Window'
 
 const AppContainer = styled.div`
   width: 100%;
@@ -10,6 +11,24 @@ const AppContainer = styled.div`
   flex-direction: column;
   position: relative;
   overflow: visible;
+`
+
+const PreviewFrame = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 16px;
+  box-sizing: border-box;
+`
+
+const PreviewImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 `
 
 const allApps = [
@@ -105,10 +124,13 @@ function App() {
       figma: { width: 400, height: 200 },
       ...saved,
       framer: { width: 400, height: 200 },
+      ...saved,
+        certifications: { width: 800, height: 400 },
     }
   })
   const [windowZIndex, setWindowZIndex] = useState({})
   const [maxZIndex, setMaxZIndex] = useState(1000)
+  const [previewWindow, setPreviewWindow] = useState(null)
   const [iconPositions, setIconPositions] = useState(getInitialIconPositions())
   const [folderPosition, setFolderPosition] = useState(getInitialFolderPosition())
 
@@ -165,7 +187,7 @@ function App() {
     // mark as closing so Window can play its animation
     setClosingApps(prev => ({ ...prev, [appId]: true }))
     // after animation duration, actually close
-    const ANIM_MS = 200
+    const ANIM_MS = 120
     setTimeout(() => {
       setOpenApps(prev => ({ ...prev, [appId]: false }))
       setClosingApps(prev => {
@@ -231,6 +253,27 @@ function App() {
       [appId]: newZIndex
     }))
   }
+
+  const openPreviewWindow = useCallback(({ image, text }) => {
+    const width = 820
+    const height = 680
+    const x = Math.max(20, (window.innerWidth - width) / 2)
+    const y = Math.max(20, (window.innerHeight - height) / 2 - 30)
+
+    setMaxZIndex(prevMax => {
+      const next = prevMax + 1
+      setPreviewWindow({ image, text, position: { x, y }, size: { width, height }, zIndex: next })
+      return next
+    })
+  }, [])
+
+  const bringPreviewToFront = useCallback(() => {
+    setMaxZIndex(prevMax => {
+      const next = prevMax + 1
+      setPreviewWindow(prev => prev ? { ...prev, zIndex: next } : prev)
+      return next
+    })
+  }, [])
 
   const updateIconPosition = (iconId, newPosition) => {
     const ICON_SIZE = 80
@@ -433,7 +476,28 @@ function App() {
         updateIconPositionDrag={updateIconPositionDrag}
         folderPosition={folderPosition}
         updateFolderPosition={updateFolderPosition}
+        onOpenPreview={openPreviewWindow}
       />
+      {previewWindow && (
+        <Window
+          key="certification-preview-window"
+          id="certification-preview"
+          title={previewWindow.text}
+          icon=""
+          color="#fff"
+          position={previewWindow.position}
+          onPositionChange={(pos) => setPreviewWindow(prev => prev ? { ...prev, position: pos } : prev)}
+          size={previewWindow.size}
+          onSizeChange={(size) => setPreviewWindow(prev => prev ? { ...prev, size } : prev)}
+          zIndex={previewWindow.zIndex}
+          onMouseDown={bringPreviewToFront}
+          onClose={() => setPreviewWindow(null)}
+        >
+          <PreviewFrame>
+            <PreviewImage src={previewWindow.image} alt={previewWindow.text} />
+          </PreviewFrame>
+        </Window>
+      )}
       <Dock 
         items={dockItems}
         baseItemSize={50}

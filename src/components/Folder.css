@@ -7,7 +7,7 @@
 }
 
 .folder {
-  transition: all 0.2s ease-in;
+  transition: transform 180ms ease, background 180ms ease;
   cursor: pointer;
 }
 
@@ -79,7 +79,7 @@
   height: 80%;
   background: var(--paper-1);
   border-radius: 10px;
-  transition: all 0.3s ease-in-out;
+  transition: transform 180ms ease, height 180ms ease;
   cursor: pointer;
 }
 
@@ -103,5 +103,5 @@
   background: var(--folder-color);
   border-radius: 5px 10px 10px 10px;
   transform-origin: bottom;
-  transition: all 0.3s ease-in-out;
+  transition: transform 180ms ease;
 }
