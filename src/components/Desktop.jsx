@@ -13,6 +13,7 @@ import IllustratorApp from './apps/IllustratorApp'
 import PhotoshopApp from './apps/PhotoshopApp'
 import LightroomApp from './apps/LightroomApp'
 import CertificationsApp from './apps/CertificationsApp'
+import OthersApp from './apps/OthersApp'
 import FigmaApp from './apps/FigmaApp'
 import FramerApp from './apps/FramerApp'
 
@@ -122,7 +123,7 @@ const appComponents = {
   photoshop: PhotoshopApp,
   lightroom: LightroomApp,
   certifications: CertificationsApp,
-  others: EmptyApp,
+  others: OthersApp,
 }
 
 function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition, othersFolderPosition, updateOthersFolderPosition, onOpenPreview }) {

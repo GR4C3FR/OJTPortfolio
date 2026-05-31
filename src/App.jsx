@@ -169,7 +169,7 @@ function App() {
       ...saved,
       certifications: { width: 800, height: 400 },
       ...saved,
-      others: { width: 800, height: 400 },
+      others: { width: 1000, height: 700 },
     }
   })
   const [windowZIndex, setWindowZIndex] = useState({})
