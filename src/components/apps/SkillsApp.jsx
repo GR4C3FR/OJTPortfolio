@@ -151,7 +151,7 @@ function SkillsApp() {
             <Section>
               <SectionTitle>SOFT SKILLS</SectionTitle>
               <List>
-                <Bullet>UI/UX design awareness</Bullet>
+                <Bullet>Design awareness</Bullet>
                 <Bullet>Team collaboration</Bullet>
                 <Bullet>Leadership</Bullet>
                 <Bullet>Time management</Bullet>
