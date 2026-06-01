@@ -139,6 +139,12 @@ const SocialLink = styled.a`
     height: 32px;
     display: block;
   }
+
+  .insta {
+    width: 37px;
+    height: 37px;
+    display: block;
+  }
 `
 
 const Form = styled.form`
@@ -296,14 +302,14 @@ function ContactApp() {
         </InfoList>
 
         <SocialRow>
-          <SocialLink href="https://www.linkedin.com/in/charles-garcia-9b6b1934b/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+          <SocialLink href="https://www.linkedin.com/in/charlesdanielgarcia/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
             <img src="/linkedin.svg" alt="LinkedIn" />
           </SocialLink>
           <SocialLink href="https://github.com/GR4C3FR" target="_blank" rel="noreferrer" aria-label="GitHub">
             <img src="/github.svg" alt="GitHub" />
           </SocialLink>
           <SocialLink href="https://www.instagram.com/gracefourthree/" target="_blank" rel="noreferrer" aria-label="Instagram">
-            <img src="/instagram.svg" alt="Instagram" />
+            <img src="/instagram.svg" alt="Instagram" className="insta"/>
           </SocialLink>
         </SocialRow>
       </LeftPanel>

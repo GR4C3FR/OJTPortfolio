@@ -93,7 +93,7 @@ function ProjectsApp() {
           <Card className="project-card1">
             <img src="/endless-charms-jewelry.webp" alt="Endless Charms" className="card-bg" />
             <div className="card-content">
-              <h4>Endless Charms Jewelry</h4>
+              <h4>Endless Charms</h4>
               <h6>Academic Project | Full-Stack Developer</h6>
               <div className="card-pills">
                 <span className="pill pill-ecj">MongoDB</span>
