@@ -110,10 +110,10 @@ function ProjectsApp() {
     <Container style={{ backgroundColor: colors[bgIndex], transition: 'background-color 260ms ease' }}>
       <BgLayer style={{ backgroundColor: colors[bgIndex], opacity: 0 }} />
       <GridLayer />
-      <Header>
+      {/* <Header>
         <Title>Selected Work</Title>
         <Description>Swipe through a few projects I’ve built and designed, with each card opening a closer look at the work.</Description>
-      </Header>
+      </Header> */}
       <Content>
       <CardSwap
         width={cardWidth}
