@@ -26,7 +26,7 @@ const TaskbarContainer = styled.div`
     z-index: 0;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     height: 68px;
     padding: 8px 14px;
     gap: 6px;
@@ -51,7 +51,7 @@ const IconWrapper = styled.div`
   justify-content: center;
   height: 60px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     height: 52px;
   }
 `
@@ -82,7 +82,7 @@ const TaskbarIcon = styled.button`
     transform: scale(0.95) translateY(0);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     width: 42px;
     height: 42px;
     font-size: 20px;
@@ -143,7 +143,7 @@ const Label = styled.div`
     border-top: 4px solid rgba(0, 0, 0, 0.9);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `

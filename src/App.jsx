@@ -87,7 +87,7 @@ const dockApps = [
 const OFFSET_STEP = 30
 const MAX_OFFSET = 150
 
-const getInitialIconPositions = () => {
+const getDefaultIconPositions = () => {
   const positions = {}
 
   // Desktop icons in a vertical stack on the left
@@ -117,18 +117,78 @@ const getInitialIconPositions = () => {
   return positions
 }
 
-const getFolderPositionsForWidth = (width) => {
-  if (width <= 480) {
-    return {
-      folderPosition: { x: Math.max(12, width - 110), y: 20 },
-      othersFolderPosition: { x: Math.max(12, width - 110), y: 132 }
+const getTabletGridPositions = (width, height) => {
+  const positions = {}
+  const columns = 6
+  const rows = 5
+  const marginX = 18
+  const marginY = 18
+  const usableWidth = Math.max(320, width - marginX * 2)
+  const usableHeight = Math.max(320, height - marginY * 2 - 120)
+  const cellWidth = usableWidth / columns
+  const cellHeight = usableHeight / rows
+  const iconWidth = 96
+  const iconHeight = 116
+
+  const place = (id, col, row) => {
+    positions[id] = {
+      x: Math.max(marginX, marginX + col * cellWidth + (cellWidth - iconWidth) / 2),
+      y: Math.max(marginY, marginY + row * cellHeight + (cellHeight - iconHeight) / 2),
     }
   }
 
-  if (width <= 768) {
+  place('photoshop', 0, 0)
+  place('illustrator', 1, 0)
+  place('lightroom', 2, 0)
+  place('davinci', 3, 0)
+  place('figma', 4, 0)
+  place('framer', 5, 0)
+  place('certifications', 0, 1)
+  place('others', 1, 1)
+
+  return positions
+}
+
+const getInitialIconPositions = () => {
+  if (typeof window === 'undefined') return getDefaultIconPositions()
+
+  const isTabletViewport = window.innerWidth > 480 && window.innerWidth <= 1024
+  if (isTabletViewport) {
+    return getTabletGridPositions(window.innerWidth, window.innerHeight)
+  }
+
+  return getDefaultIconPositions()
+}
+
+const getFolderPositionsForViewport = (width, height) => {
+  if (width > 480 && width <= 1024) {
+    const tabletGrid = getTabletGridPositions(width, height)
+
     return {
-      folderPosition: { x: Math.max(16, width - 130), y: 10 },
-      othersFolderPosition: { x: Math.max(16, width - 130), y: 130 }
+      folderPosition: tabletGrid.certifications,
+      othersFolderPosition: tabletGrid.others,
+    }
+  }
+
+  if (width <= 480) {
+    return {
+      folderPosition: { x: Math.max(10, width - 96), y: 16 },
+      othersFolderPosition: { x: Math.max(10, width - 96), y: 124 }
+    }
+  }
+
+  if (width <= 1024) {
+    const isPortrait = height > width
+
+    return {
+      folderPosition: {
+        x: Math.max(16, width - (isPortrait ? 136 : 156)),
+        y: isPortrait ? 18 : 10,
+      },
+      othersFolderPosition: {
+        x: Math.max(16, width - (isPortrait ? 136 : 156)),
+        y: isPortrait ? 138 : 130,
+      }
     }
   }
 
@@ -140,12 +200,12 @@ const getFolderPositionsForWidth = (width) => {
 
 const getInitialFolderPosition = () => {
   if (typeof window === 'undefined') return { x: 0, y: 0 }
-  return getFolderPositionsForWidth(window.innerWidth).folderPosition
+  return getFolderPositionsForViewport(window.innerWidth, window.innerHeight).folderPosition
 }
 
 const getInitialOthersFolderPosition = () => {
   if (typeof window === 'undefined') return { x: 0, y: 120 }
-  return getFolderPositionsForWidth(window.innerWidth).othersFolderPosition
+  return getFolderPositionsForViewport(window.innerWidth, window.innerHeight).othersFolderPosition
 }
 
 const getRightAnchoredFolderPositions = () => {
@@ -156,7 +216,7 @@ const getRightAnchoredFolderPositions = () => {
     }
   }
 
-  return getFolderPositionsForWidth(window.innerWidth)
+  return getFolderPositionsForViewport(window.innerWidth, window.innerHeight)
 }
 
 const getSavedState = (key, fallback) => {
@@ -211,15 +271,20 @@ function App() {
   const [othersFolderPosition, setOthersFolderPosition] = useState(getInitialOthersFolderPosition)
 
   useEffect(() => {
-    const syncRightFolders = () => {
-      const positions = getRightAnchoredFolderPositions()
-      setFolderPosition(positions.folderPosition)
-      setOthersFolderPosition(positions.othersFolderPosition)
+    const syncResponsiveLayout = () => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const iconLayout = getInitialIconPositions()
+      const folderLayout = getRightAnchoredFolderPositions()
+
+      setIconPositions(iconLayout)
+      setFolderPosition(folderLayout.folderPosition)
+      setOthersFolderPosition(folderLayout.othersFolderPosition)
     }
 
-    syncRightFolders()
-    window.addEventListener('resize', syncRightFolders)
-    return () => window.removeEventListener('resize', syncRightFolders)
+    syncResponsiveLayout()
+    window.addEventListener('resize', syncResponsiveLayout)
+    return () => window.removeEventListener('resize', syncResponsiveLayout)
   }, [])
 
   // Save to localStorage when positions or sizes change

@@ -28,7 +28,7 @@ const DesktopContainer = styled.div`
   min-height: calc(100vh - 100px);
   touch-action: manipulation;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     padding: 10px;
     min-height: calc(100vh - 84px);
   }
@@ -54,7 +54,7 @@ const FolderWrapper = styled.div`
   transition: background 0.2s ease;
   touch-action: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     width: 88px;
     height: 108px;
   }
@@ -83,7 +83,7 @@ const FolderLabel = styled.div`
   letter-spacing: 0.5px;
   font-family: 'Manrope', sans-serif;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     font-size: 10px;
   }
 

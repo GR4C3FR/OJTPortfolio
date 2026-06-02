@@ -40,7 +40,7 @@ const WindowWrapper = styled.div`
     opacity: 0;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     min-width: 90vw;
     max-width: 95vw;
   }
@@ -103,7 +103,7 @@ const Button = styled.button`
     background: #b91c1c;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     width: 22px;
     height: 22px;
   }

@@ -15,10 +15,10 @@ const IconWrapper = styled.div`
   width: 100px;
   box-sizing: border-box;
 
-  @media (max-width: 768px) {
-    width: 88px;
-    padding: 8px 6px;
-    gap: 6px;
+  @media (max-width: 1024px) {
+    width: 96px;
+    padding: 9px 7px;
+    gap: 7px;
   }
 
   @media (max-width: 480px) {
@@ -45,8 +45,8 @@ const Icon = styled.div`
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   pointer-events: none;
 
-  @media (max-width: 768px) {
-    font-size: 26px;
+  @media (max-width: 1024px) {
+    font-size: 29px;
   }
 `
 
@@ -57,9 +57,9 @@ const IconImage = styled.img`
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   pointer-events: none;
 
-  @media (max-width: 768px) {
-    width: 34px;
-    height: 34px;
+  @media (max-width: 1024px) {
+    width: 38px;
+    height: 38px;
   }
 `
 
@@ -75,9 +75,9 @@ const Label = styled.span`
   font-weight: 400;
   pointer-events: none;
 
-  @media (max-width: 768px) {
-    font-size: 10px;
-    max-width: 72px;
+  @media (max-width: 1024px) {
+    font-size: 11px;
+    max-width: 78px;
   }
 `
 
