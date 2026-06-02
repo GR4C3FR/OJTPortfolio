@@ -4,16 +4,16 @@ import styled from 'styled-components'
 
 const DraggableWrapper = styled.div`
   position: ${props => (props.$compact ? 'fixed' : 'absolute')};
-  top: ${props => (props.$compact ? '12px' : '0')};
-  left: ${props => (props.$compact ? '12px' : '0')};
-  right: ${props => (props.$compact ? '12px' : 'auto')};
-  bottom: ${props => (props.$compact ? '88px' : 'auto')};
+  top: ${props => (props.$tabletApp ? `${props.$tabletTop}px` : props.$compact ? '12px' : '0')};
+  left: ${props => (props.$tabletApp ? `${props.$tabletLeft}px` : props.$compact ? '12px' : '0')};
+  right: ${props => (props.$tabletApp ? 'auto' : props.$compact ? '12px' : 'auto')};
+  bottom: ${props => (props.$tabletApp ? 'auto' : props.$compact ? '88px' : 'auto')};
   z-index: ${props => props.$zIndex || 1000};
 `
 
 const WindowWrapper = styled.div`
-  width: ${props => props.$compact ? '100%' : `${props.$width}px`};
-  height: ${props => props.$compact ? '100%' : `${props.$height}px`};
+  width: ${props => props.$tabletApp ? `${props.$width}px` : props.$compact ? '100%' : `${props.$width}px`};
+  height: ${props => props.$tabletApp ? `${props.$height}px` : props.$compact ? '100%' : `${props.$height}px`};
   background: ${props => props.$color || 'white'};
   border-radius: ${props => (props.$compact ? '16px' : '8px')};
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -41,8 +41,10 @@ const WindowWrapper = styled.div`
   }
 
   @media (max-width: 1024px) {
+    ${props => props.$tabletApp ? '' : `
     min-width: 90vw;
     max-width: 95vw;
+    `}
   }
 `
 
@@ -161,7 +163,7 @@ const ResizeHandle = styled.div`
   }
 `
 
-function Window({ id, title, icon, color, children, onClose, onCloseStart, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown, closing = false, dragHandleSelector = '.window-drag-surface' }) {
+function Window({ id, title, icon, color, children, onClose, onCloseStart, position, onPositionChange, size, onSizeChange, zIndex, onMouseDown, closing = false, dragHandleSelector = '.window-drag-surface', tabletWindowType = 'app' }) {
   const [isResizing, setIsResizing] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
@@ -317,12 +319,24 @@ function Window({ id, title, icon, color, children, onClose, onCloseStart, posit
   }
 
   const isCompactViewport = viewport.width <= 1024
-  const currentWidth = isCompactViewport ? Math.max(280, viewport.width - 24) : (size?.width || 400)
-  const currentHeight = isCompactViewport ? Math.max(240, viewport.height - 112) : (size?.height || 300)
+  const isTabletAppWindow = isCompactViewport && tabletWindowType === 'app'
+  const isTabletFolderWindow = isCompactViewport && tabletWindowType === 'folder'
+  const currentWidth = isTabletAppWindow
+    ? Math.max(320, Math.min(viewport.width - 120, Math.round(viewport.width * 0.54)))
+    : isTabletFolderWindow
+      ? Math.max(520, Math.min(viewport.width - 48, Math.round(viewport.width * 0.84)))
+      : (isCompactViewport ? Math.max(280, viewport.width - 24) : (size?.width || 400))
+  const currentHeight = isTabletAppWindow
+    ? Math.max(220, Math.min(viewport.height - 220, Math.round(viewport.width * 0.34)))
+    : isTabletFolderWindow
+      ? Math.max(420, Math.min(viewport.height - 96, Math.round(viewport.height * 0.72)))
+      : (isCompactViewport ? Math.max(240, viewport.height - 112) : (size?.height || 300))
+  const tabletTop = isTabletAppWindow ? Math.max(12, Math.round((viewport.height - currentHeight) / 2)) : 0
+  const tabletLeft = isTabletAppWindow ? Math.max(12, Math.round((viewport.width - currentWidth) / 2)) : 0
 
   // Calculate bounds to allow partial off-screen dragging
   // Keep at least 250px horizontally and 50px (title bar) vertically visible
-  const bounds = isCompactViewport ? {
+  const bounds = (isTabletAppWindow || isTabletFolderWindow) ? {
     left: 0,
     top: 0,
     right: 0,
@@ -347,12 +361,13 @@ function Window({ id, title, icon, color, children, onClose, onCloseStart, posit
       bounds={bounds}
       defaultPosition={position || { x: 50 + Math.random() * 30, y: 50 + Math.random() * 30 }}
     >
-      <DraggableWrapper ref={wrapperRef} $zIndex={zIndex} $compact={isCompactViewport} onClickCapture={handleClickCapture}>
+      <DraggableWrapper ref={wrapperRef} $zIndex={zIndex} $compact={isCompactViewport} $tabletApp={isTabletAppWindow} $tabletTop={tabletTop} $tabletLeft={tabletLeft} onClickCapture={handleClickCapture}>
         <WindowWrapper
           className={`window-drag-surface ${isMounted && !isClosing ? 'is-open' : ''} ${isClosing ? 'is-closing' : ''}`.trim()}
           $color={color}
           $width={currentWidth}
           $height={currentHeight}
+          $tabletApp={isTabletAppWindow}
           $compact={isCompactViewport}
           onMouseDownCapture={handleWindowMouseDownCapture}
           onMouseUpCapture={handleWindowMouseUpCapture}

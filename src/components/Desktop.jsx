@@ -398,6 +398,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
             onSizeChange={(size) => updateWindowSize(appId, size)}
             zIndex={windowZIndex[appId] || 1000}
             onMouseDown={() => bringToFront(appId)}
+            tabletWindowType={appId === 'certifications' || appId === 'others' ? 'folder' : 'app'}
           >
             {React.createElement(appComponents[appId], { onOpenPreview })}
           </Window>

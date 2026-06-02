@@ -690,6 +690,7 @@ function App() {
           zIndex={previewWindow.zIndex}
           onMouseDown={bringPreviewToFront}
           onClose={() => setPreviewWindow(null)}
+          tabletWindowType="folder"
         >
           <PreviewFrame>
             <PreviewImage
