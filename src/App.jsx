@@ -609,8 +609,8 @@ function App() {
 
   const downloadResume = useCallback(() => {
     const link = document.createElement('a')
-    link.href = '/resume.pdf'
-    link.download = 'resume.pdf'
+    link.href = '/Charles Daniel Garcia - Resume.pdf'
+    link.download = 'Charles Daniel Garcia - Resume.pdf'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
