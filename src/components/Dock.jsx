@@ -88,17 +88,22 @@ export default function Dock({
   distance = 200,
   panelHeight = 68,
   dockHeight = 256,
-  baseItemSize = 50
+  baseItemSize = 50,
+  isCompactViewport = false
 }) {
   const mouseX = useMotionValue(Infinity);
   const [isHovered, setIsHovered] = useState(false);
 
+  const effectiveMagnification = isCompactViewport ? Math.min(magnification, 58) : magnification
+  const effectivePanelHeight = isCompactViewport ? Math.min(panelHeight, 56) : panelHeight
+  const effectiveDockHeight = isCompactViewport ? Math.min(dockHeight, 220) : dockHeight
+
   const maxHeight = useMemo(
-    () => Math.max(dockHeight, magnification + magnification / 2 + 4),
-    [magnification, dockHeight]
+    () => Math.max(effectiveDockHeight, effectiveMagnification + effectiveMagnification / 2 + 4),
+    [effectiveMagnification, effectiveDockHeight]
   );
 
-  const height = useSpring(isHovered ? maxHeight : panelHeight, spring);
+  const height = useSpring(isHovered ? maxHeight : effectivePanelHeight, spring);
 
   return (
     <motion.div style={{ height, willChange: 'height' }} className="dock-outer">
@@ -120,7 +125,7 @@ export default function Dock({
           <MemoizedDockItem
             key={index}
             onClick={item.onClick}
-            magnification={magnification}
+            magnification={effectiveMagnification}
             baseItemSize={baseItemSize}
             icon={item.icon}
             label={item.label}

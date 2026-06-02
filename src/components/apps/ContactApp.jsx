@@ -15,6 +15,10 @@ const Container = styled.div`
   @media (max-width: 760px) {
     grid-template-columns: 1fr;
   }
+
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
 `
 
 const Panel = styled.section`
@@ -24,6 +28,10 @@ const Panel = styled.section`
   border: 0;
   box-shadow: none;
   backdrop-filter: none;
+
+  @media (max-width: 480px) {
+    padding: 14px 12px;
+  }
 `
 
 const LeftPanel = styled(Panel)`
@@ -62,6 +70,10 @@ const Copy = styled.p`
   line-height: 1.45;
   font-size: 0.82rem;
   padding-bottom: 4px;
+
+  @media (max-width: 480px) {
+    font-size: 0.78rem;
+  }
 `
 
 const InfoList = styled.div`
@@ -79,6 +91,10 @@ const InfoRow = styled.div`
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(15, 23, 42, 0.06);
+
+  @media (max-width: 480px) {
+    padding: 7px 9px;
+  }
 `
 
 const InfoText = styled.div`
@@ -169,6 +185,11 @@ const Input = styled.input`
   font-family: inherit;
   background: rgba(255, 255, 255, 0.92);
 
+  @media (max-width: 480px) {
+    padding: 7px 9px;
+    font-size: 0.74rem;
+  }
+
   &:focus {
     outline: none;
     border-color: rgba(17, 24, 39, 0.3);
@@ -186,6 +207,12 @@ const Textarea = styled.textarea`
   font-family: inherit;
   resize: none;
   background: rgba(255, 255, 255, 0.92);
+
+  @media (max-width: 480px) {
+    height: 92px;
+    padding: 7px 9px;
+    font-size: 0.74rem;
+  }
 
   &:focus {
     outline: none;
@@ -215,6 +242,10 @@ const Button = styled.button`
     cursor: progress;
     opacity: 0.7;
   }
+
+  @media (max-width: 480px) {
+    padding: 7px 11px;
+  }
 `
 
 const Status = styled.div`
@@ -225,6 +256,10 @@ const Status = styled.div`
   background: ${({ $tone }) => ($tone === 'success' ? 'rgba(34, 197, 94, 0.12)' : 'rgba(239, 68, 68, 0.12)')};
   color: ${({ $tone }) => ($tone === 'success' ? '#22c55e' : '#991b1b')};
   border: 1px solid ${({ $tone }) => ($tone === 'success' ? 'rgba(34, 197, 94, 0.22)' : 'rgba(239, 68, 68, 0.22)')};
+
+  @media (max-width: 480px) {
+    font-size: 0.68rem;
+  }
 `
 
 function ContactApp() {

@@ -25,6 +25,21 @@ const TaskbarContainer = styled.div`
     pointer-events: none;
     z-index: 0;
   }
+
+  @media (max-width: 768px) {
+    height: 68px;
+    padding: 8px 14px;
+    gap: 6px;
+    margin-bottom: 18px;
+
+    &::before {
+      height: 68px;
+      bottom: -8px;
+      left: -8px;
+      right: -8px;
+      border-radius: 18px;
+    }
+  }
 `
 
 const IconWrapper = styled.div`
@@ -35,6 +50,10 @@ const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
   height: 60px;
+
+  @media (max-width: 768px) {
+    height: 52px;
+  }
 `
 
 const TaskbarIcon = styled.button`
@@ -61,6 +80,16 @@ const TaskbarIcon = styled.button`
 
   &:active {
     transform: scale(0.95) translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+
+    &:hover {
+      transform: scale(1.1) translateY(-6px);
+    }
   }
 
   ${props => props.isActive && `
@@ -112,6 +141,10 @@ const Label = styled.div`
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 4px solid rgba(0, 0, 0, 0.9);
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `
 

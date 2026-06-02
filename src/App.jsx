@@ -117,15 +117,46 @@ const getInitialIconPositions = () => {
   return positions
 }
 
+const getFolderPositionsForWidth = (width) => {
+  if (width <= 480) {
+    return {
+      folderPosition: { x: Math.max(12, width - 110), y: 20 },
+      othersFolderPosition: { x: Math.max(12, width - 110), y: 132 }
+    }
+  }
+
+  if (width <= 768) {
+    return {
+      folderPosition: { x: Math.max(16, width - 130), y: 10 },
+      othersFolderPosition: { x: Math.max(16, width - 130), y: 130 }
+    }
+  }
+
+  return {
+    folderPosition: { x: Math.max(20, width - 140), y: 0 },
+    othersFolderPosition: { x: Math.max(20, width - 140), y: 120 }
+  }
+}
+
 const getInitialFolderPosition = () => {
   if (typeof window === 'undefined') return { x: 0, y: 0 }
-  return { x: window.innerWidth - 150, y: 0 }
+  return getFolderPositionsForWidth(window.innerWidth).folderPosition
 }
 
 const getInitialOthersFolderPosition = () => {
   if (typeof window === 'undefined') return { x: 0, y: 120 }
-  const folderPos = getInitialFolderPosition()
-  return { x: folderPos.x, y: folderPos.y + 120 }
+  return getFolderPositionsForWidth(window.innerWidth).othersFolderPosition
+}
+
+const getRightAnchoredFolderPositions = () => {
+  if (typeof window === 'undefined') {
+    return {
+      folderPosition: { x: 0, y: 0 },
+      othersFolderPosition: { x: 0, y: 120 }
+    }
+  }
+
+  return getFolderPositionsForWidth(window.innerWidth)
 }
 
 const getSavedState = (key, fallback) => {
@@ -178,6 +209,18 @@ function App() {
   const [iconPositions, setIconPositions] = useState(getInitialIconPositions())
   const [folderPosition, setFolderPosition] = useState(getInitialFolderPosition())
   const [othersFolderPosition, setOthersFolderPosition] = useState(getInitialOthersFolderPosition)
+
+  useEffect(() => {
+    const syncRightFolders = () => {
+      const positions = getRightAnchoredFolderPositions()
+      setFolderPosition(positions.folderPosition)
+      setOthersFolderPosition(positions.othersFolderPosition)
+    }
+
+    syncRightFolders()
+    window.addEventListener('resize', syncRightFolders)
+    return () => window.removeEventListener('resize', syncRightFolders)
+  }, [])
 
   // Save to localStorage when positions or sizes change
   useEffect(() => {

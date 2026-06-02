@@ -26,9 +26,16 @@ const DesktopContainer = styled.div`
   position: relative;
   background: transparent;
   min-height: calc(100vh - 100px);
+  touch-action: manipulation;
 
   @media (max-width: 768px) {
     padding: 10px;
+    min-height: calc(100vh - 84px);
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px;
+    min-height: calc(100vh - 76px);
   }
 `
 
@@ -45,6 +52,17 @@ const FolderWrapper = styled.div`
   height: 120px;
   border-radius: 8px;
   transition: background 0.2s ease;
+  touch-action: none;
+
+  @media (max-width: 768px) {
+    width: 88px;
+    height: 108px;
+  }
+
+  @media (max-width: 480px) {
+    width: 80px;
+    height: 100px;
+  }
   
   &:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -64,6 +82,14 @@ const FolderLabel = styled.div`
   font-weight: 400;
   letter-spacing: 0.5px;
   font-family: 'Manrope', sans-serif;
+
+  @media (max-width: 768px) {
+    font-size: 10px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 9px;
+  }
 `
 
 const ContextMenu = styled.div`
@@ -75,16 +101,20 @@ const ContextMenu = styled.div`
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   z-index: 10000;
-  min-width: 200px;
-  padding: 8px 0;
+  min-width: 160px;
+  padding: 6px 0;
+
+  @media (max-width: 480px) {
+    min-width: 140px;
+  }
 `
 
 const ContextMenuItem = styled.div`
-  padding: 12px 16px;
+  padding: 8px 12px;
   color: white;
   cursor: pointer;
   transition: background 0.2s ease;
-  font-size: 14px;
+  font-size: 13px;
   user-select: none;
 
   &:hover {
@@ -93,6 +123,11 @@ const ContextMenuItem = styled.div`
 
   &:active {
     background: rgba(255, 255, 255, 0.25);
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px 10px;
+    font-size: 12px;
   }
 `
 
@@ -134,6 +169,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
   const [contextMenu, setContextMenu] = useState(null);
   const folderRef = React.useRef(null)
   const othersFolderRef = React.useRef(null)
+  const contextMenuRef = React.useRef(null)
 
   // Close folder when certifications or others window is closed or begins closing
   useEffect(() => {
@@ -144,6 +180,25 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
       setIsOthersFolderOpen(false);
     }
   }, [openApps['certifications'], closingApps['certifications'], openApps['others'], closingApps['others']]);
+
+  React.useLayoutEffect(() => {
+    if (!contextMenu || !contextMenuRef.current) return;
+    const el = contextMenuRef.current;
+    const rect = el.getBoundingClientRect();
+    let newX = contextMenu.x;
+    let newY = contextMenu.y;
+
+    if (rect.right > window.innerWidth) {
+      newX = Math.max(8, window.innerWidth - rect.width - 8);
+    }
+    if (rect.bottom > window.innerHeight) {
+      newY = Math.max(8, window.innerHeight - rect.height - 8);
+    }
+
+    if (newX !== contextMenu.x || newY !== contextMenu.y) {
+      setContextMenu(prev => ({ ...prev, x: newX, y: newY }));
+    }
+  }, [contextMenu]);
 
   const handleDragStart = (e, d) => {
     setDragStart({ x: d.x, y: d.y });
@@ -349,7 +404,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
         )
       )}
       {contextMenu && (
-        <ContextMenu style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }} onClick={(e) => e.stopPropagation()}>
+        <ContextMenu ref={contextMenuRef} style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }} onClick={(e) => e.stopPropagation()}>
           {contextMenu.items.map((item, idx) => {
             if (item === 'separator') {
               return <ContextMenuSeparator key={`sep-${idx}`} />;

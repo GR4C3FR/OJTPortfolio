@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CardSwap, { Card } from './CardSwap'
 
 const Container = styled.div`
@@ -12,6 +12,10 @@ const Container = styled.div`
   align-items: center;
   padding: 0;
   overflow: hidden;
+
+  @media (max-width: 900px) {
+    align-items: flex-start;
+  }
 `
 
 const BgLayer = styled.div`
@@ -46,6 +50,12 @@ const Header = styled.div`
   left: 20px;
   max-width: 280px;
   color: #1f2937;
+
+  @media (max-width: 900px) {
+    top: 14px;
+    left: 14px;
+    max-width: calc(100% - 28px);
+  }
 `
 
 const Title = styled.h2`
@@ -58,11 +68,34 @@ const Description = styled.p`
   margin: 0;
   color: #475569;
   line-height: 1.6;
+
+  @media (max-width: 600px) {
+    line-height: 1.45;
+    font-size: 0.9rem;
+  }
 `
 
 function ProjectsApp() {
   const colors = ['#b60b39', '#40bd70', '#334acd']
   const [bgIndex, setBgIndex] = useState(0)
+  const [viewport, setViewport] = useState(() => ({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1280,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800,
+  }))
+
+  useEffect(() => {
+    const updateViewport = () => setViewport({ width: window.innerWidth, height: window.innerHeight })
+    updateViewport()
+    window.addEventListener('resize', updateViewport)
+    return () => window.removeEventListener('resize', updateViewport)
+  }, [])
+
+  const cardWidth = viewport.width <= 480 ? 260 : viewport.width <= 768 ? 320 : 450
+  const cardHeight = viewport.width <= 480 ? 188 : viewport.width <= 768 ? 232 : 300
+  const cardDistance = viewport.width <= 480 ? 20 : 28
+  const verticalDistance = viewport.width <= 480 ? 22 : 32
+  const offsetX = viewport.width <= 768 ? 0 : -12
+  const offsetY = viewport.width <= 768 ? 0 : 10
 
   const handleFrontChange = idx => {
     console.debug('ProjectsApp.handleFrontChange called with', idx)
@@ -77,14 +110,18 @@ function ProjectsApp() {
     <Container style={{ backgroundColor: colors[bgIndex], transition: 'background-color 260ms ease' }}>
       <BgLayer style={{ backgroundColor: colors[bgIndex], opacity: 0 }} />
       <GridLayer />
+      <Header>
+        <Title>Selected Work</Title>
+        <Description>Swipe through a few projects I’ve built and designed, with each card opening a closer look at the work.</Description>
+      </Header>
       <Content>
       <CardSwap
-        width={450}
-        height={300}
-        cardDistance={28}
-        verticalDistance={32}
-        offsetX={-12}
-        offsetY={10}
+        width={cardWidth}
+        height={cardHeight}
+        cardDistance={cardDistance}
+        verticalDistance={verticalDistance}
+        offsetX={offsetX}
+        offsetY={offsetY}
         delay={5000}
         pauseOnHover
         skewAmount={0}

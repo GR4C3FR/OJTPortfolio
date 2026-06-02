@@ -20,6 +20,14 @@ const Container = styled.div`
   font-family: 'JetBrains Mono', monospace;
   gap: 20px;
   box-sizing: border-box;
+
+  @media (max-width: 900px) {
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    gap: 14px;
+  }
 `
 
 const ContentLayout = styled.div`
@@ -33,6 +41,10 @@ const ContentLayout = styled.div`
   @media (max-width: 1200px) {
     flex-direction: column;
     height: auto;
+  }
+
+  @media (max-width: 600px) {
+    gap: 14px;
   }
 `
 
@@ -52,6 +64,14 @@ const HeroImage = styled.img`
   object-position: ${HERO_IMAGE_POSITION};
   display: block;
   max-height: 535px;
+
+  @media (max-width: 1200px) {
+    max-height: 420px;
+  }
+
+  @media (max-width: 600px) {
+    max-height: 280px;
+  }
 `
 
 const RightPanel = styled.div`
@@ -63,6 +83,15 @@ const RightPanel = styled.div`
   justify-content: flex-start;
   overflow: hidden;
   padding-right: 10px;
+
+  @media (max-width: 1200px) {
+    gap: 36px;
+    padding-right: 0;
+  }
+
+  @media (max-width: 600px) {
+    gap: 24px;
+  }
 `
 
 const Section = styled.div`
@@ -74,12 +103,16 @@ const Section = styled.div`
 
 const Title = styled.h2`
   color: #111827;
-  font-size: ${TITLE_SIZE}px;
+  font-size: clamp(2rem, 6vw, ${TITLE_SIZE}px);
   line-height: 1;
   margin: 0;
   letter-spacing: -2px;
   text-transform: uppercase;
   overflow-wrap: break-word;
+
+  @media (max-width: 600px) {
+    letter-spacing: -1px;
+  }
 `
 
 const Subtitle = styled.h3`
@@ -120,6 +153,15 @@ const TemporaryText = styled.div`
     em {
       font-style: italic;
     }
+  }
+
+  @media (max-width: 900px) {
+    margin: 0 8px 28px 8px;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 13px;
+    margin: 0 2px 18px 2px;
   }
 `
 

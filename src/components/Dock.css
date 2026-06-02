@@ -28,6 +28,21 @@
     inset 0 -1px 0 rgba(255, 255, 255, 0.1);
 }
 
+@media (max-width: 768px) {
+  .dock-panel {
+    bottom: 14px;
+    gap: 0.65rem;
+    padding: 0.4rem;
+    max-width: calc(100vw - 1rem);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .dock-panel::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .dock-item {
   position: relative;
   display: inline-flex;
@@ -50,6 +65,25 @@
   will-change: transform;
   overflow: visible;
   padding: 8px;
+}
+
+@media (max-width: 768px) {
+  .dock-item {
+    padding: 6px;
+    border-radius: 16px;
+  }
+
+  .dock-item:hover {
+    transform: translateY(-2px);
+  }
+
+  .dock-icon {
+    font-size: 20px;
+  }
+
+  .dock-label {
+    display: none;
+  }
 }
 
 .dock-item:hover {

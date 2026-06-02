@@ -3,17 +3,19 @@ import Draggable from 'react-draggable'
 import styled from 'styled-components'
 
 const DraggableWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: ${props => (props.$compact ? 'fixed' : 'absolute')};
+  top: ${props => (props.$compact ? '12px' : '0')};
+  left: ${props => (props.$compact ? '12px' : '0')};
+  right: ${props => (props.$compact ? '12px' : 'auto')};
+  bottom: ${props => (props.$compact ? '88px' : 'auto')};
   z-index: ${props => props.$zIndex || 1000};
 `
 
 const WindowWrapper = styled.div`
-  width: ${props => props.width}px;
-  height: ${props => props.height}px;
+  width: ${props => props.$compact ? '100%' : `${props.$width}px`};
+  height: ${props => props.$compact ? '100%' : `${props.$height}px`};
   background: ${props => props.$color || 'white'};
-  border-radius: 8px;
+  border-radius: ${props => (props.$compact ? '16px' : '8px')};
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
@@ -48,12 +50,12 @@ const TitleBar = styled.div`
   background: ${props => props.$color || 'white'};
   color: ${props => (props.$color && props.$color.toLowerCase() !== '#fff' ? '#f9fafb' : '#1f2937')};
   font-family: 'Manrope', sans-serif;
-  padding: 12px 18px;
+  padding: ${props => (props.$compact ? '10px 14px' : '12px 18px')};
   display: flex;
   align-items: center;
   justify-content: space-between;
   user-select: none;
-  border-radius: 8px 8px 0 0;
+  border-radius: ${props => (props.$compact ? '16px 16px 0 0' : '8px 8px 0 0')};
   border-bottom: 1px solid ${props => (props.$color && props.$color.toLowerCase() !== '#fff' ? 'rgba(255,255,255,0.2)' : '#cbcbcb')};
   flex-shrink: 0;
 `
@@ -99,6 +101,11 @@ const Button = styled.button`
 
   &:active {
     background: #b91c1c;
+  }
+
+  @media (max-width: 768px) {
+    width: 22px;
+    height: 22px;
   }
 `
 
@@ -158,6 +165,10 @@ function Window({ id, title, icon, color, children, onClose, onCloseStart, posit
   const [isResizing, setIsResizing] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+  const [viewport, setViewport] = useState(() => ({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1280,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800,
+  }))
   const resizeStartPos = useRef({ x: 0, y: 0 })
   const resizeStartSize = useRef({ width: 0, height: 0 })
   const dragStartPos = useRef({ x: 0, y: 0 })
@@ -168,6 +179,13 @@ function Window({ id, title, icon, color, children, onClose, onCloseStart, posit
 
   useEffect(() => {
     setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    const updateViewport = () => setViewport({ width: window.innerWidth, height: window.innerHeight })
+    updateViewport()
+    window.addEventListener('resize', updateViewport)
+    return () => window.removeEventListener('resize', updateViewport)
   }, [])
 
   // React to external close requests by playing the close animation
@@ -298,40 +316,48 @@ function Window({ id, title, icon, color, children, onClose, onCloseStart, posit
     }
   }
 
-  const currentWidth = size?.width || 400
-  const currentHeight = size?.height || 300
+  const isCompactViewport = viewport.width <= 1024
+  const currentWidth = isCompactViewport ? Math.max(280, viewport.width - 24) : (size?.width || 400)
+  const currentHeight = isCompactViewport ? Math.max(240, viewport.height - 112) : (size?.height || 300)
 
   // Calculate bounds to allow partial off-screen dragging
   // Keep at least 250px horizontally and 50px (title bar) vertically visible
-  const bounds = {
+  const bounds = isCompactViewport ? {
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+  } : {
     left: -currentWidth + 250,
     top: -currentHeight + 150,
-    right: window.innerWidth - 250,
-    bottom: window.innerHeight - 150,
+    right: viewport.width - 250,
+    bottom: viewport.height - 150,
   }
 
   return (
     <Draggable 
-      handle={dragHandleSelector}
+      handle={isCompactViewport ? undefined : dragHandleSelector}
+      disabled={isCompactViewport}
       cancel="button, a, input, textarea, select, .circular-gallery, .circular-gallery *"
       onStart={handleDraggableStart}
       onDrag={handleDrag}
       onStop={handleDragStop}
-      position={position}
+      position={isCompactViewport ? { x: 0, y: 0 } : position}
       nodeRef={wrapperRef}
       bounds={bounds}
       defaultPosition={position || { x: 50 + Math.random() * 30, y: 50 + Math.random() * 30 }}
     >
-      <DraggableWrapper ref={wrapperRef} $zIndex={zIndex} onClickCapture={handleClickCapture}>
+      <DraggableWrapper ref={wrapperRef} $zIndex={zIndex} $compact={isCompactViewport} onClickCapture={handleClickCapture}>
         <WindowWrapper
           className={`window-drag-surface ${isMounted && !isClosing ? 'is-open' : ''} ${isClosing ? 'is-closing' : ''}`.trim()}
           $color={color}
-          width={currentWidth}
-          height={currentHeight}
+          $width={currentWidth}
+          $height={currentHeight}
+          $compact={isCompactViewport}
           onMouseDownCapture={handleWindowMouseDownCapture}
           onMouseUpCapture={handleWindowMouseUpCapture}
         >
-          <TitleBar $color={color} className="window-titlebar-drag-surface" onMouseDown={onMouseDown}>
+          <TitleBar $color={color} $compact={isCompactViewport} className="window-titlebar-drag-surface" onMouseDown={onMouseDown}>
             <TitleContent>
               <Icon>{icon}</Icon>
               <span>{title}</span>

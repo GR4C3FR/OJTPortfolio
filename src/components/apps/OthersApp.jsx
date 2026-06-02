@@ -11,6 +11,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  @media (max-width: 600px) {
+    padding: 12px;
+    gap: 10px;
+  }
 `
 
 const Title = styled.h2`
@@ -18,6 +23,10 @@ const Title = styled.h2`
   font-size: 1rem;
   color: #111827;
   font-family: 'Manrope', sans-serif;
+
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
+  }
 `
 
 const Subtitle = styled.p`
@@ -26,6 +35,10 @@ const Subtitle = styled.p`
   color: #4b5563;
   font-family: 'Manrope', sans-serif;
   line-height: 1.4;
+
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+  }
 `
 
 const MasonryWrapper = styled.div`

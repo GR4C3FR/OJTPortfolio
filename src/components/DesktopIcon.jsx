@@ -15,6 +15,17 @@ const IconWrapper = styled.div`
   width: 100px;
   box-sizing: border-box;
 
+  @media (max-width: 768px) {
+    width: 88px;
+    padding: 8px 6px;
+    gap: 6px;
+  }
+
+  @media (max-width: 480px) {
+    width: 80px;
+    padding: 6px 4px;
+  }
+
   &:active {
     cursor: grabbing;
   }
@@ -33,6 +44,10 @@ const Icon = styled.div`
   font-size: 30px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    font-size: 26px;
+  }
 `
 
 const IconImage = styled.img`
@@ -41,6 +56,11 @@ const IconImage = styled.img`
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    width: 34px;
+    height: 34px;
+  }
 `
 
 const Label = styled.span`
@@ -54,6 +74,11 @@ const Label = styled.span`
   font-family: 'Manrope', sans-serif;
   font-weight: 400;
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    font-size: 10px;
+    max-width: 72px;
+  }
 `
 
 function DesktopIcon({ id, icon, name, onClick, color, position, onPositionChange, onDrag }) {

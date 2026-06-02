@@ -10,6 +10,7 @@ const Notepad = styled.div`
   box-sizing: border-box;
   font-family: 'Jetbrains', monospace;
   background: transparent;
+  overflow: auto;
 `
 
 const Container = styled.div`
@@ -24,6 +25,15 @@ const Container = styled.div`
   background-size: 24px 24px;
   border-radius: 0 0 8px 8px;
   box-shadow: inset 0 0 0 1px rgba(82, 112, 68, 0.12);
+
+  @media (max-width: 760px) {
+    padding: 14px 12px 12px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 10px 10px;
+    background-size: 20px 20px;
+  }
 `
 
 const Header = styled.div`
@@ -36,6 +46,10 @@ const Title = styled.h2`
   font-size: 20px;
   font-weight: 600;
   color: #222;
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `
 
 const Columns = styled.div`
@@ -60,6 +74,12 @@ const Section = styled.section`
   box-shadow: 4px 4px 0px black;
   transition: transform 0.2s ease-in-out;
 
+  @media (max-width: 480px) {
+    margin-bottom: 14px;
+    padding: 8px;
+    box-shadow: 3px 3px 0px black;
+  }
+
   &:hover {
     transform: translateY(-5px);
   }
@@ -71,6 +91,10 @@ const SectionTitle = styled.h3`
   color: black;
   font-weight: 600;
   border-bottom: 1px solid black;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `
 
 const Bullet = styled.li`
@@ -79,6 +103,11 @@ const Bullet = styled.li`
   font-size: 13px;
   line-height: 1.2;
   margin-left: 12px;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-left: 10px;
+  }
 `
 const DateText = styled.span`
   display: block;
