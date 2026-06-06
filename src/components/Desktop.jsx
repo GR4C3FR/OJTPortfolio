@@ -162,7 +162,8 @@ const appComponents = {
 }
 
 function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, windowPositions, updateWindowPosition, windowSizes, updateWindowSize, getNextPosition, windowZIndex, bringToFront, iconPositions, updateIconPosition, updateIconPositionDrag, folderPosition, updateFolderPosition, othersFolderPosition, updateOthersFolderPosition, onOpenPreview }) {
-  const [dragStart, setDragStart] = useState(null);
+  const [folderDragStart, setFolderDragStart] = useState(null);
+  const [othersDragStart, setOthersDragStart] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isFolderOpen, setIsFolderOpen] = useState(false);
   const [isOthersFolderOpen, setIsOthersFolderOpen] = useState(false);
@@ -213,20 +214,52 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
     }
   }, [contextMenu]);
 
-  const handleDragStart = (e, d) => {
-    setDragStart({ x: d.x, y: d.y });
+  const handleFolderClick = (folderId) => {
+    if (folderId === 'certifications') {
+      setIsFolderOpen(prev => !prev);
+      toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
+    } else {
+      setIsOthersFolderOpen(prev => !prev);
+      toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
+    }
   };
 
-  const handleDragStop = (e, d) => {
-    if (dragStart) {
-      const distance = Math.hypot(d.x - dragStart.x, d.y - dragStart.y);
+  const handleFolderDragStart = (e, d) => {
+    setIsDragging(false);
+    setFolderDragStart({ x: d.x, y: d.y });
+  };
+
+  const handleFolderDragStop = (e, d) => {
+    if (folderDragStart) {
+      const distance = Math.hypot(d.x - folderDragStart.x, d.y - folderDragStart.y);
       if (distance > 5) {
         setIsDragging(true);
         setTimeout(() => setIsDragging(false), 100);
+        updateFolderPosition({ x: d.x, y: d.y });
+      } else {
+        handleFolderClick('certifications');
       }
     }
-    updateFolderPosition({ x: d.x, y: d.y });
-    setDragStart(null);
+    setFolderDragStart(null);
+  };
+
+  const handleOthersDragStart = (e, d) => {
+    setIsDragging(false);
+    setOthersDragStart({ x: d.x, y: d.y });
+  };
+
+  const handleOthersDragStop = (e, d) => {
+    if (othersDragStart) {
+      const distance = Math.hypot(d.x - othersDragStart.x, d.y - othersDragStart.y);
+      if (distance > 5) {
+        setIsDragging(true);
+        setTimeout(() => setIsDragging(false), 100);
+        updateOthersFolderPosition({ x: d.x, y: d.y });
+      } else {
+        handleFolderClick('others');
+      }
+    }
+    setOthersDragStart(null);
   };
 
   const handleContextMenu = (e) => {
@@ -313,33 +346,13 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
       <Draggable
         nodeRef={folderRef}
         position={folderPosition}
-        onStart={handleDragStart}
+        onStart={handleFolderDragStart}
         onDrag={(e, d) => updateFolderPosition({ x: d.x, y: d.y })}
-        onStop={handleDragStop}
+        onStop={handleFolderDragStop}
         bounds="parent"
       >
         <FolderWrapper
           ref={folderRef}
-          onClick={() => {
-            if (!isDragging) {
-              setIsFolderOpen(!isFolderOpen);
-              toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
-            }
-          }}
-          onTouchEnd={(e) => {
-            // Touch devices / DevTools touch simulation may fire touch events instead of click
-            e.preventDefault();
-            if (!isDragging) {
-              setIsFolderOpen(!isFolderOpen);
-              toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
-            }
-          }}
-          onPointerUp={(e) => {
-            if (!isDragging) {
-              setIsFolderOpen(!isFolderOpen);
-              toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
-            }
-          }}
         >
           <Folder 
             color="#F8D775" 
@@ -359,44 +372,13 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
       <Draggable
         nodeRef={othersFolderRef}
         position={othersFolderPosition}
-        onStart={(e, d) => {
-          setDragStart({ x: d.x, y: d.y });
-        }}
+        onStart={handleOthersDragStart}
         onDrag={(e, d) => updateOthersFolderPosition({ x: d.x, y: d.y })}
-        onStop={(e, d) => {
-          if (dragStart) {
-            const distance = Math.hypot(d.x - dragStart.x, d.y - dragStart.y);
-            if (distance > 5) {
-              setIsDragging(true);
-              setTimeout(() => setIsDragging(false), 100);
-            }
-          }
-          updateOthersFolderPosition({ x: d.x, y: d.y });
-          setDragStart(null);
-        }}
+        onStop={handleOthersDragStop}
         bounds="parent"
       >
         <FolderWrapper
           ref={othersFolderRef}
-          onClick={() => {
-            if (!isDragging) {
-              setIsOthersFolderOpen(!isOthersFolderOpen);
-              toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
-            }
-          }}
-          onTouchEnd={(e) => {
-            e.preventDefault();
-            if (!isDragging) {
-              setIsOthersFolderOpen(!isOthersFolderOpen);
-              toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
-            }
-          }}
-          onPointerUp={(e) => {
-            if (!isDragging) {
-              setIsOthersFolderOpen(!isOthersFolderOpen);
-              toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
-            }
-          }}
         >
           <Folder 
             color="#F8D775" 
