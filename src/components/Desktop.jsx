@@ -318,12 +318,29 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
         onStop={handleDragStop}
         bounds="parent"
       >
-        <FolderWrapper ref={folderRef} onClick={() => {
-          if (!isDragging) {
-            setIsFolderOpen(!isFolderOpen);
-            toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
-          }
-        }}>
+        <FolderWrapper
+          ref={folderRef}
+          onClick={() => {
+            if (!isDragging) {
+              setIsFolderOpen(!isFolderOpen);
+              toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
+            }
+          }}
+          onTouchEnd={(e) => {
+            // Touch devices / DevTools touch simulation may fire touch events instead of click
+            e.preventDefault();
+            if (!isDragging) {
+              setIsFolderOpen(!isFolderOpen);
+              toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
+            }
+          }}
+          onPointerUp={(e) => {
+            if (!isDragging) {
+              setIsFolderOpen(!isFolderOpen);
+              toggleApp('certifications', { id: 'certifications', name: 'Certifications', color: '#fff' });
+            }
+          }}
+        >
           <Folder 
             color="#F8D775" 
             size={0.4} 
@@ -359,12 +376,28 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
         }}
         bounds="parent"
       >
-        <FolderWrapper ref={othersFolderRef} onClick={() => {
-          if (!isDragging) {
-            setIsOthersFolderOpen(!isOthersFolderOpen);
-            toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
-          }
-        }}>
+        <FolderWrapper
+          ref={othersFolderRef}
+          onClick={() => {
+            if (!isDragging) {
+              setIsOthersFolderOpen(!isOthersFolderOpen);
+              toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
+            }
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            if (!isDragging) {
+              setIsOthersFolderOpen(!isOthersFolderOpen);
+              toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
+            }
+          }}
+          onPointerUp={(e) => {
+            if (!isDragging) {
+              setIsOthersFolderOpen(!isOthersFolderOpen);
+              toggleApp('others', { id: 'others', name: 'OTHERS', color: '#fff' });
+            }
+          }}
+        >
           <Folder 
             color="#F8D775" 
             size={0.4} 
