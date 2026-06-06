@@ -170,6 +170,19 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
   const folderRef = React.useRef(null)
   const othersFolderRef = React.useRef(null)
   const contextMenuRef = React.useRef(null)
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1024px)');
+    const handler = (e) => setIsSmallScreen(e.matches);
+    setIsSmallScreen(mql.matches);
+    if (mql.addEventListener) mql.addEventListener('change', handler);
+    else mql.addListener(handler);
+    return () => {
+      if (mql.removeEventListener) mql.removeEventListener('change', handler);
+      else mql.removeListener(handler);
+    };
+  }, []);
 
   // Close folder when certifications or others window is closed or begins closing
   useEffect(() => {
@@ -296,7 +309,7 @@ function Desktop({ openApps, toggleApp, closeApp, closingApps = {}, allApps, win
   ));
 
   return (
-    <DesktopContainer onContextMenu={handleContextMenu} onClick={closeContextMenu}>
+    <DesktopContainer onContextMenu={isSmallScreen ? undefined : handleContextMenu} onClick={closeContextMenu}>
       <Draggable
         nodeRef={folderRef}
         position={folderPosition}
