@@ -13,7 +13,7 @@ const Container = styled.div`
   padding: 0;
   overflow: hidden;
 
-  @media (max-width: 900px) {
+  @media (max-width: 600px) {
     align-items: flex-start;
   }
 `
@@ -42,6 +42,11 @@ const GridLayer = styled.div`
 const Content = styled.div`
   position: relative;
   z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const Header = styled.div`
@@ -90,12 +95,28 @@ function ProjectsApp() {
     return () => window.removeEventListener('resize', updateViewport)
   }, [])
 
-  const cardWidth = viewport.width <= 480 ? 260 : viewport.width <= 768 ? 320 : 450
-  const cardHeight = viewport.width <= 480 ? 188 : viewport.width <= 768 ? 232 : 300
-  const cardDistance = viewport.width <= 480 ? 20 : 28
-  const verticalDistance = viewport.width <= 480 ? 22 : 32
-  const offsetX = viewport.width <= 768 ? 0 : -12
-  const offsetY = viewport.width <= 768 ? 0 : 10
+  const isMobile = viewport.width <= 480
+  const isSmallTablet = viewport.width <= 768
+  const isTablet = viewport.width <= 1024
+
+  const cardWidth = isMobile
+    ? 260
+    : isSmallTablet
+      ? Math.min(520, viewport.width - 80)
+      : isTablet
+        ? Math.min(900, viewport.width - 60)
+        : 450
+  const cardHeight = isMobile
+    ? 188
+    : isSmallTablet
+      ? Math.min(340, Math.round(viewport.height * 0.64))
+      : isTablet
+        ? Math.min(620, Math.round(viewport.height * 0.72))
+        : 300
+  const cardDistance = isMobile ? 20 : isSmallTablet ? 42 : isTablet ? 70 : 60
+  const verticalDistance = isMobile ? 22 : isSmallTablet ? 42 : isTablet ? 76 : 70
+  const offsetX = 0
+  const offsetY = isTablet ? 10 : 10
 
   const handleFrontChange = idx => {
     console.debug('ProjectsApp.handleFrontChange called with', idx)
