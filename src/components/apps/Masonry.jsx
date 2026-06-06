@@ -107,7 +107,15 @@ const Masonry = ({
   const hasMounted = useRef(false)
 
   // create a shuffled copy of items so gallery order is randomized
-  const itemsShuffled = useMemo(() => shuffleArray(items || []), [items])
+  // filter out specific images (3.webp and 4.webp)
+  const itemsShuffled = useMemo(() => {
+    const filtered = (items || []).filter((item) => {
+      if (!item || !item.img) return true
+      const name = item.img.split('/').pop()
+      return name !== '3.webp' && name !== '4.webp'
+    })
+    return shuffleArray(filtered)
+  }, [items])
 
   useEffect(() => {
     // Preload but don't wait — this runs in background to warm the cache.
