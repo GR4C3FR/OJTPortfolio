@@ -48,6 +48,12 @@ const MasonryWrapper = styled.div`
   overflow: hidden;
   background: #f8fafc;
   position: relative;
+
+  @media (max-width: 1024px) {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
 `
 
 function OthersApp() {
